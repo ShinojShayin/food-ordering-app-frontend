@@ -32,3 +32,23 @@
   width: 23px !important;
   height: 23px !important;
 }
+
+.tabs {
+  margin-bottom: 20px;
+}
+
+.red {
+  color: red;
+}
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
+
+.modal-l-input {
+  width: 250px;
+}
