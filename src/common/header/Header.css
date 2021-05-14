@@ -1,0 +1,20 @@
+.headerSearchIcon {
+  color: white;
+}
+.searchContainer {
+  display: flex;
+  justify-content: center;
+}
+
+#search-item::-webkit-input-placeholder {
+  font-size: 14px;
+}
+#search-item::-moz-placeholder {
+  font-size: 12px;
+}
+#search-item:-ms-input-placeholder {
+  font-size: 12px;
+}
+#search-item:-moz-placeholder {
+  font-size: 12px;
+}
