@@ -6,15 +6,29 @@
   justify-content: center;
 }
 
-#search-item::-webkit-input-placeholder {
-  font-size: 14px;
+#search-item {
+  width: 270px;
 }
-#search-item::-moz-placeholder {
-  font-size: 12px;
-}
-#search-item:-ms-input-placeholder {
-  font-size: 12px;
-}
+#search-item::-webkit-input-placeholder,
+#search-item::-moz-placeholder,
+#search-item:-ms-input-placeholder,
 #search-item:-moz-placeholder {
-  font-size: 12px;
+  font-size: 16px;
+}
+
+.headerSearchIcon {
+  margin-right: 8px;
+}
+.logo-icon {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.loginBtn {
+  height: 41px;
+}
+
+.accountIcon {
+  width: 23px !important;
+  height: 23px !important;
 }
