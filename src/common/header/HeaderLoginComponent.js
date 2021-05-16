@@ -13,6 +13,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
 import validator from "validator";
 import Snackbar from "@material-ui/core/Snackbar";
+import serverurl from "../config/serverurl";
+import utility from "../utility";
 
 const loginModalStyle = {
   content: {
@@ -44,6 +46,7 @@ class HeaderLoginComponent extends Component {
       loginModalIsOpen: false,
       tabValue: 0,
       loginContactnoRequired: "dispNone",
+      loginContactnoInvalid: "dispNone",
       loginContactno: "",
       loginPasswordRequired: "dispNone",
       loginPassword: "",
@@ -61,6 +64,8 @@ class HeaderLoginComponent extends Component {
       contact: "",
       messageBox: false,
       messageContent: "",
+      serverErrorMessageShow: "dispNone",
+      serverErrorMessage: "",
     };
   }
 
@@ -107,24 +112,36 @@ class HeaderLoginComponent extends Component {
   registerClickHandler = (e) => {
     let valid = true;
 
-    this.state.firstname.trim() === ""
+    this.setState({
+      serverErrorMessageShow: false,
+      serverErrorMessage: "",
+    });
+
+    let firstname = this.state.firstname.trim();
+    let lastname = this.state.lastname.trim();
+    let email = this.state.email.trim();
+    let password = this.state.registerPassword.trim();
+    let contactno = this.state.contact.trim();
+
+    firstname === ""
       ? this.setState({ firstnameRequired: "dispBlock" })
       : this.setState({ firstnameRequired: "dispNone" });
-    this.state.email.trim() === ""
+    email === ""
       ? this.setState({ emailRequired: "dispBlock" })
       : this.setState({ emailRequired: "dispNone" });
-    this.state.registerPassword.trim() === ""
+    password === ""
       ? this.setState({ registerPasswordRequired: "dispBlock" })
       : this.setState({ registerPasswordRequired: "dispNone" });
-    this.state.contact.trim() === ""
+    contactno === ""
       ? this.setState({ contactRequired: "dispBlock" })
       : this.setState({ contactRequired: "dispNone" });
 
     if (
-      this.state.firstname.trim() === "" ||
-      this.state.email.trim() === "" ||
-      this.state.registerPassword.trim() === "" ||
-      this.state.contact.trim() === ""
+      firstname === "" ||
+      email === "" ||
+      contactno === "" ||
+      contactno === "" ||
+      password === ""
     )
       valid = false;
 
@@ -132,15 +149,40 @@ class HeaderLoginComponent extends Component {
     valid = this.passwordCheck();
     valid = this.contactnoCheck();
 
-    if (valid) this.registerUser();
+    if (valid)
+      this.registerUser(contactno, email, firstname, lastname, password);
   };
 
-  registerUser = () => {
-    this.setState({
-      messageContent: "Registered successfully! Please login now!",
-      messageBox: true,
-      tabValue: 0,
-    });
+  registerUser = (contactno, email, firstname, lastname, password) => {
+    let responseCallback = (code, response, extra) => {
+      if (code !== 201) {
+        this.setState({
+          serverErrorMessageShow: true,
+          serverErrorMessage: response.message,
+        });
+      } else {
+        this.setState({
+          messageContent: "Registered successfully! Please login now!",
+          messageBox: true,
+          tabValue: 0,
+        });
+      }
+    };
+
+    let requestData = {
+      contact_number: contactno,
+      email_address: email,
+      first_name: firstname,
+      last_name: lastname,
+      password: password,
+    };
+
+    utility.postData(
+      serverurl.register_user,
+      responseCallback,
+      requestData,
+      null
+    );
   };
 
   contactnoCheck = () => {
@@ -156,6 +198,23 @@ class HeaderLoginComponent extends Component {
       }
     } else {
       this.setState({ invalidContactNoRequired: "dispNone" });
+      return true;
+    }
+  };
+
+  loginContactnoCheck = () => {
+    let contactno = this.state.loginContactno.trim();
+    let onlynumberExprs = /^[0-9\b]+$/;
+    if (contactno.length > 0) {
+      if (!onlynumberExprs.test(contactno) || !(contactno.length === 10)) {
+        this.setState({ loginContactnoInvalid: "dispBlock" });
+        return false;
+      } else {
+        this.setState({ loginContactnoInvalid: "dispNone" });
+        return true;
+      }
+    } else {
+      this.setState({ loginContactnoInvalid: "dispNone" });
       return true;
     }
   };
@@ -210,6 +269,7 @@ class HeaderLoginComponent extends Component {
   };
 
   loginClickHandler = (e) => {
+    let valid = true;
     this.state.loginContactno.trim() === ""
       ? this.setState({ loginContactnoRequired: "dispBlock" })
       : this.setState({ loginContactnoRequired: "dispNone" });
@@ -220,8 +280,16 @@ class HeaderLoginComponent extends Component {
     if (
       this.state.loginContactno.trim() === "" ||
       this.state.loginPassword.trim() === ""
-    ) {
-      return;
+    )
+      valid = false;
+
+    valid = this.loginContactnoCheck();
+
+    if (valid) {
+      this.setState({
+        messageContent: "Logged in successfully!",
+        messageBox: true,
+      });
     }
   };
 
@@ -229,6 +297,12 @@ class HeaderLoginComponent extends Component {
     this.setState({
       messageContent: "",
       messageBox: false,
+    });
+
+    this.setState({
+      serverErrorMessageShow: true,
+      serverErrorMessage:
+        "This contact number is already registered! Try other contact number.",
     });
   };
 
@@ -262,7 +336,7 @@ class HeaderLoginComponent extends Component {
           </Tabs>
           {this.state.tabValue === 0 && (
             <TabContainer>
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="contactno">Contact No.</InputLabel>
                 <Input
                   id="contactno"
@@ -273,10 +347,13 @@ class HeaderLoginComponent extends Component {
                 <FormHelperText className={this.state.loginContactnoRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
+                <FormHelperText className={this.state.loginContactnoInvalid}>
+                  <span className="red">Invalid Contact</span>
+                </FormHelperText>
               </FormControl>
               <br />
               <br />
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
                   id="password"
@@ -384,10 +461,16 @@ class HeaderLoginComponent extends Component {
                 </FormHelperText>
               </FormControl>
               <br />
+              <FormControl required className="login-form-control mg-top-10">
+                <FormHelperText className={this.state.serverErrorMessageShow}>
+                  <span className="red">{this.state.serverErrorMessage}</span>
+                </FormHelperText>
+              </FormControl>
               <br />
               <Button
                 variant="contained"
                 color="primary"
+                className="mg-top-10"
                 onClick={this.registerClickHandler}
               >
                 SIGNUP
@@ -403,7 +486,7 @@ class HeaderLoginComponent extends Component {
           }}
           open={this.state.messageBox}
           onClose={this.handleMessageBoxClose}
-          autoHideDuration={6000}
+          autoHideDuration={10000}
           message={this.state.messageContent}
         />
       </React.Fragment>

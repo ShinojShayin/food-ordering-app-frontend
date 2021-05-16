@@ -6,7 +6,11 @@ class Controller extends Component {
   render() {
     return (
       <Router>
-        <Route exact path="/" render={(props) => <Home {...props} />} />
+        <Route
+          exact
+          path="/"
+          render={(props) => <Home {...props} fetchData={this.fetchData} />}
+        />
       </Router>
     );
   }
