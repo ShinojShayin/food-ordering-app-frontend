@@ -21,12 +21,12 @@ class Header extends Component {
       <AppBar
         position="static"
         style={{ backgroundColor: "#263238" }}
-        className={classes.grow}
+        className="fbar-header"
       >
         <Toolbar>
           <Fastfood className="logo-icon" />
 
-          <div className={classes.grow}>
+          <div className="fbar-search-container">
             <HeaderSearchComponent />
           </div>
 

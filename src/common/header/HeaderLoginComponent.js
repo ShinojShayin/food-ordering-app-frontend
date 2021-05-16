@@ -11,10 +11,12 @@ import Input from "@material-ui/core/Input";
 import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
+import validator from "validator";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const loginModalStyle = {
   content: {
-    top: "55%",
+    top: "50%",
     left: "50%",
     right: "auto",
     bottom: "auto",
@@ -51,9 +53,14 @@ class HeaderLoginComponent extends Component {
       emailRequired: "dispNone",
       email: "",
       registerPasswordRequired: "dispNone",
+      invalidEmailRequired: "dispNone",
+      invalidPasswordRequired: "dispNone",
+      invalidContactNoRequired: "dispNone",
       registerPassword: "",
       contactRequired: "dispNone",
       contact: "",
+      messageBox: false,
+      messageContent: "",
     };
   }
 
@@ -77,11 +84,160 @@ class HeaderLoginComponent extends Component {
     this.setState({ loginPassword: e.target.value });
   };
 
+  inputFirstNameChangeHandler = (e) => {
+    this.setState({ firstname: e.target.value });
+  };
+
+  inputLastNameChangeHandler = (e) => {
+    this.setState({ lastname: e.target.value });
+  };
+
+  inputEmailChangeHandler = (e) => {
+    this.setState({ email: e.target.value });
+  };
+
+  inputRegisterPasswordChangeHandler = (e) => {
+    this.setState({ registerPassword: e.target.value });
+  };
+
+  inputContactChangeHandler = (e) => {
+    this.setState({ contact: e.target.value });
+  };
+
+  registerClickHandler = (e) => {
+    let valid = true;
+
+    this.state.firstname.trim() === ""
+      ? this.setState({ firstnameRequired: "dispBlock" })
+      : this.setState({ firstnameRequired: "dispNone" });
+    this.state.email.trim() === ""
+      ? this.setState({ emailRequired: "dispBlock" })
+      : this.setState({ emailRequired: "dispNone" });
+    this.state.registerPassword.trim() === ""
+      ? this.setState({ registerPasswordRequired: "dispBlock" })
+      : this.setState({ registerPasswordRequired: "dispNone" });
+    this.state.contact.trim() === ""
+      ? this.setState({ contactRequired: "dispBlock" })
+      : this.setState({ contactRequired: "dispNone" });
+
+    if (
+      this.state.firstname.trim() === "" ||
+      this.state.email.trim() === "" ||
+      this.state.registerPassword.trim() === "" ||
+      this.state.contact.trim() === ""
+    )
+      valid = false;
+
+    valid = this.emailCheck();
+    valid = this.passwordCheck();
+    valid = this.contactnoCheck();
+
+    if (valid) this.registerUser();
+  };
+
+  registerUser = () => {
+    this.setState({
+      messageContent: "Registered successfully! Please login now!",
+      messageBox: true,
+      tabValue: 0,
+    });
+  };
+
+  contactnoCheck = () => {
+    let contactno = this.state.contact.trim();
+    let onlynumberExprs = /^[0-9\b]+$/;
+    if (contactno.length > 0) {
+      if (!onlynumberExprs.test(contactno) || !(contactno.length === 10)) {
+        this.setState({ invalidContactNoRequired: "dispBlock" });
+        return false;
+      } else {
+        this.setState({ invalidContactNoRequired: "dispNone" });
+        return true;
+      }
+    } else {
+      this.setState({ invalidContactNoRequired: "dispNone" });
+      return true;
+    }
+  };
+
+  passwordCheck = () => {
+    let pwd = this.state.registerPassword;
+
+    if (pwd.length > 0) {
+      if (!this.validatePassword(pwd)) {
+        this.setState({ invalidPasswordRequired: "dispBlock" });
+        return false;
+      } else {
+        this.setState({ invalidPasswordRequired: "dispNone" });
+        return true;
+      }
+    } else {
+      this.setState({ invalidPasswordRequired: "dispNone" });
+      return true;
+    }
+  };
+
+  emailCheck = () => {
+    let email = this.state.email.trim();
+    if (email.length > 0) {
+      let isValidEmail = validator.isEmail(email);
+
+      isValidEmail
+        ? this.setState({ invalidEmailRequired: "dispNone" })
+        : this.setState({ invalidEmailRequired: "dispBlock" });
+
+      return isValidEmail;
+    } else {
+      this.setState({ invalidEmailRequired: "dispNone" });
+      return true;
+    }
+  };
+
+  validatePassword = (password) => {
+    const exprs = {
+      uppercase: /[A-Z]/,
+      lowercase: /[a-z]/,
+      number: /[0-9]/,
+      specialChar: /[#@$%&*!^]/,
+    };
+
+    return (
+      exprs.uppercase.test(password) &&
+      exprs.lowercase.test(password) &&
+      exprs.number.test(password) &&
+      exprs.specialChar.test(password)
+    );
+  };
+
+  loginClickHandler = (e) => {
+    this.state.loginContactno.trim() === ""
+      ? this.setState({ loginContactnoRequired: "dispBlock" })
+      : this.setState({ loginContactnoRequired: "dispNone" });
+    this.state.loginPassword.trim() === ""
+      ? this.setState({ loginPasswordRequired: "dispBlock" })
+      : this.setState({ loginPasswordRequired: "dispNone" });
+
+    if (
+      this.state.loginContactno.trim() === "" ||
+      this.state.loginPassword.trim() === ""
+    ) {
+      return;
+    }
+  };
+
+  handleMessageBoxClose = () => {
+    this.setState({
+      messageContent: "",
+      messageBox: false,
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
         <Button
           variant="contained"
+          color="default"
           className="loginBtn"
           startIcon={<AccountCircleIcon className="accountIcon" />}
           onClick={this.openLoginModal}
@@ -147,13 +303,12 @@ class HeaderLoginComponent extends Component {
 
           {this.state.tabValue === 1 && (
             <TabContainer>
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="firstname">First Name</InputLabel>
                 <Input
                   id="firstname"
                   type="text"
                   className="modal-l-input"
-                  firstname={this.state.firstname}
                   onChange={this.inputFirstNameChangeHandler}
                 />
                 <FormHelperText className={this.state.firstnameRequired}>
@@ -162,59 +317,70 @@ class HeaderLoginComponent extends Component {
               </FormControl>
               <br />
               <br />
-              <FormControl>
+              <FormControl className="login-form-control">
                 <InputLabel htmlFor="lastname">Last Name</InputLabel>
                 <Input
                   id="lastname"
                   type="text"
                   className="modal-l-input"
-                  lastname={this.state.lastname}
                   onChange={this.inputLastNameChangeHandler}
                 />
               </FormControl>
               <br />
               <br />
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="email">Email</InputLabel>
                 <Input
                   id="email"
                   type="text"
                   className="modal-l-input"
-                  email={this.state.email}
                   onChange={this.inputEmailChangeHandler}
                 />
                 <FormHelperText className={this.state.emailRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
+                <FormHelperText className={this.state.invalidEmailRequired}>
+                  <span className="red">Invalid Email</span>
+                </FormHelperText>
               </FormControl>
               <br />
               <br />
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="registerPassword">Password</InputLabel>
                 <Input
                   id="registerPassword"
                   type="password"
                   className="modal-l-input"
-                  registerpassword={this.state.registerPassword}
                   onChange={this.inputRegisterPasswordChangeHandler}
                 />
                 <FormHelperText className={this.state.registerPasswordRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
+                <FormHelperText className={this.state.invalidPasswordRequired}>
+                  <span className="red">
+                    Password must contain at least one capital letter, one small
+                    letter, one number, and one special character
+                  </span>
+                </FormHelperText>
               </FormControl>
               <br />
               <br />
-              <FormControl required>
+              <FormControl required className="login-form-control">
                 <InputLabel htmlFor="contact">Contact No.</InputLabel>
                 <Input
                   id="contact"
                   type="text"
                   className="modal-l-input"
-                  contact={this.state.contact}
                   onChange={this.inputContactChangeHandler}
                 />
                 <FormHelperText className={this.state.contactRequired}>
                   <span className="red">required</span>
+                </FormHelperText>
+                <FormHelperText className={this.state.invalidContactNoRequired}>
+                  <span className="red">
+                    Contact No. must contain only numbers and must be 10 digits
+                    long
+                  </span>
                 </FormHelperText>
               </FormControl>
               <br />
@@ -229,6 +395,17 @@ class HeaderLoginComponent extends Component {
             </TabContainer>
           )}
         </Modal>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={this.state.messageBox}
+          onClose={this.handleMessageBoxClose}
+          autoHideDuration={6000}
+          message={this.state.messageContent}
+        />
       </React.Fragment>
     );
   }

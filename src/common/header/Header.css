@@ -1,19 +1,24 @@
+.fbar-header,
+.fbar-search-container {
+  flex-grow: 1;
+}
 .headerSearchIcon {
   color: white;
 }
-.searchContainer {
-  display: flex;
-  justify-content: center;
+
+.login-form-control {
+  width: 80%;
+}
+
+.modal-l-input {
+  width: 100%;
 }
 
 #search-item {
   width: 270px;
 }
-#search-item::-webkit-input-placeholder,
-#search-item::-moz-placeholder,
-#search-item:-ms-input-placeholder,
-#search-item:-moz-placeholder {
-  font-size: 16px;
+#search-item::-webkit-input-placeholder {
+  font-size: 0.99em;
 }
 
 .headerSearchIcon {
@@ -49,6 +54,32 @@
   display: block;
 }
 
-.modal-l-input {
-  width: 250px;
+.searchContainer {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 750px) {
+  .fbar-header > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .loginBtn {
+    margin-bottom: 15px;
+  }
+
+  .searchContainer {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
+  .logo-icon {
+    margin-top: 15px;
+  }
+
+  #search-item::-webkit-input-placeholder {
+    font-size: 1.1em;
+  }
 }
