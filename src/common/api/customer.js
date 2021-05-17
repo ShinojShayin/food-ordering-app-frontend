@@ -1,4 +1,8 @@
-import { LOGIN_CUSTOMER_URL, REGISTER_CUSTOMER_URL } from "../config/serverurl";
+import {
+  LOGIN_CUSTOMER_URL,
+  REGISTER_CUSTOMER_URL,
+  LOGOUT_CUSTOMER_URL,
+} from "../config/serverurl";
 import utility from "../utility";
 
 /**
@@ -48,6 +52,26 @@ export function loginCustomer(contactno, password, onComplete) {
 
   utility.postData(
     { url: LOGIN_CUSTOMER_URL, headers: header },
+    null,
+    responseCallback,
+    null
+  );
+}
+
+export function logoutCustomer(onComplete) {
+  let userInfo = utility.getLoggedinUser();
+
+  let responseCallback = (code, response) => {
+    utility.logoutUser();
+    onComplete(code, response);
+  };
+
+  let header = {
+    authorization: "Bearer " + userInfo.access_token,
+  };
+
+  utility.postData(
+    { url: LOGOUT_CUSTOMER_URL, headers: header },
     null,
     responseCallback,
     null

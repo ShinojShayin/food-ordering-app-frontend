@@ -7,6 +7,7 @@
  * @Param extra - Any extra data which require when callback method is invoked is passed through this variable
  *  */
 let fetchDataMethod = (reqObject, data, callback, extra) => {
+  console.log("fetchDataMethod called");
   let xhr = new XMLHttpRequest();
   xhr.addEventListener("readystatechange", function() {
     if (this.readyState === 4) {
@@ -65,10 +66,16 @@ let postDataMethod = (reqObject, data, callback, extra) => {
 /**
  * This method return user object if user is loggedin
  *
- * @returns user
+ * @returns user - {
+    access_token: "tokenValue",
+    firstname: "first_name",
+    lastname: "last_name",
+  }
  */
 let getLoggedinUserMethod = () => {
-  return sessionStorage.getItem("user-info");
+  let user = localStorage.getItem("user-info");
+  if (user) user = JSON.parse(user);
+  return user;
 };
 
 /**
@@ -78,13 +85,16 @@ let getLoggedinUserMethod = () => {
  * @param {*} accessToken
  */
 let setUserSessionMethod = (response, accessToken) => {
+  console.log("setUserSessionMethod called");
   let user = {
     access_token: accessToken,
     firstname: response.first_name,
     lastname: response.last_name,
   };
 
-  sessionStorage.setItem("user-info", user);
+  localStorage.setItem("user-info", JSON.stringify(user));
+
+  return user;
 };
 
 /**
@@ -92,7 +102,7 @@ let setUserSessionMethod = (response, accessToken) => {
  *
  */
 let logoutUserMethod = () => {
-  sessionStorage.clear();
+  localStorage.removeItem("user-info");
 };
 
 let utility = {

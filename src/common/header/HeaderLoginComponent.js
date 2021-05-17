@@ -1,19 +1,28 @@
 import React, { Component } from "react";
 import "./Header.css";
-import Button from "@material-ui/core/Button";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Modal from "react-modal";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import Typography from "@material-ui/core/Typography";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import {
+  Button,
+  Tabs,
+  Tab,
+  FormControl,
+  InputLabel,
+  Input,
+  Typography,
+  FormHelperText,
+  Snackbar,
+  Menu,
+  MenuItem,
+  Paper,
+} from "@material-ui/core";
 import PropTypes from "prop-types";
 import validator from "validator";
-import Snackbar from "@material-ui/core/Snackbar";
-import { registerCustomer, loginCustomer } from "../api/customer";
+import {
+  registerCustomer,
+  loginCustomer,
+  logoutCustomer,
+} from "../api/customer";
 import utility from "../utility";
 
 const loginModalStyle = {
@@ -42,6 +51,7 @@ TabContainer.propTypes = {
 class HeaderLoginComponent extends Component {
   constructor() {
     super();
+
     this.state = {
       loginModalIsOpen: false,
       tabValue: 0,
@@ -68,6 +78,7 @@ class HeaderLoginComponent extends Component {
       messageContent: "",
       regServerErrorMsgShow: "dispNone",
       regServerErrorMsg: "",
+      anchorEl: false,
     };
   }
 
@@ -120,6 +131,14 @@ class HeaderLoginComponent extends Component {
       messageContent: "",
       messageBox: false,
     });
+  };
+
+  handleProfileMenuClose = (e) => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleProfileMenuOpen = (e) => {
+    this.setState({ anchorEl: e.currentTarget });
   };
 
   //** Field Binding/onOpenHandle/onCloseHandle Code ends here **//
@@ -313,7 +332,13 @@ class HeaderLoginComponent extends Component {
 
   onLoginRequestComplete = (code, response, responseHeader) => {
     if (code === 200) {
-      utility.setUserSession(response, responseHeader["access-token"]);
+      let user = utility.setUserSession(
+        response,
+        responseHeader["access-token"],
+        this
+      );
+
+      this.props.updateUserInfoState(user);
 
       this.setState({
         messageContent: "Logged in successfully!",
@@ -353,20 +378,62 @@ class HeaderLoginComponent extends Component {
     if (valid) loginCustomer(contactno, password, this.onLoginRequestComplete);
   };
 
+  logoutUser = () => {
+    logoutCustomer((code, response) => {
+      this.props.updateUserInfoState(null);
+    });
+  };
+
   //** Button onClick Method End Here **//
 
   render() {
     return (
       <React.Fragment>
-        <Button
-          variant="contained"
-          color="default"
-          className="loginBtn"
-          startIcon={<AccountCircleIcon className="accountIcon" />}
-          onClick={this.openLoginModal}
-        >
-          Login
-        </Button>
+        {!Boolean(this.props.userInfo) ? (
+          <Button
+            variant="contained"
+            color="default"
+            className="loginBtn"
+            startIcon={<AccountCircleIcon className="accountIcon" />}
+            onClick={this.openLoginModal}
+          >
+            Login
+          </Button>
+        ) : (
+          <React.Fragment>
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              className="login-profile-menu"
+              onClick={this.handleProfileMenuOpen}
+            >
+              <AccountCircleIcon className="profile-icon" />{" "}
+              {this.props.userInfo.firstname}
+            </Button>
+            <Menu
+              id="simple-menu"
+              elevation={0}
+              anchorEl={this.state.anchorEl}
+              keepMounted
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleProfileMenuClose}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <Paper>
+                <MenuItem>My Profile</MenuItem>
+                <MenuItem onClick={this.logoutUser}>Logout</MenuItem>
+              </Paper>
+            </Menu>
+          </React.Fragment>
+        )}
 
         <Modal
           ariaHideApp={false}
@@ -552,7 +619,7 @@ class HeaderLoginComponent extends Component {
           }}
           open={this.state.messageBox}
           onClose={this.handleMessageBoxClose}
-          autoHideDuration={10000}
+          autoHideDuration={6000}
           message={this.state.messageContent}
         />
       </React.Fragment>

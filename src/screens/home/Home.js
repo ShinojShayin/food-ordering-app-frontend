@@ -6,7 +6,10 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header
+          userInfo={this.props.userInfo}
+          updateUserInfoState={this.props.updateUserInfoState}
+        />
         Home
       </div>
     );
