@@ -78,7 +78,7 @@ class HeaderLoginComponent extends Component {
       messageContent: "",
       regServerErrorMsgShow: "dispNone",
       regServerErrorMsg: "",
-      anchorEl: false,
+      anchorEl: null,
     };
   }
 
@@ -359,6 +359,7 @@ class HeaderLoginComponent extends Component {
     this.setState({
       loginServerErrorMsgShow: "dispNone",
       loginServerErrorMsg: "",
+      anchorEl: null,
     });
 
     let contactno = this.state.loginContactno.trim();
@@ -400,16 +401,17 @@ class HeaderLoginComponent extends Component {
             Login
           </Button>
         ) : (
-          <React.Fragment>
+          <div>
             <Button
               aria-controls="simple-menu"
               aria-haspopup="true"
               className="login-profile-menu"
               onClick={this.handleProfileMenuOpen}
             >
-              <AccountCircleIcon className="profile-icon" />{" "}
+              <AccountCircleIcon className="profile-icon" />
               {this.props.userInfo.firstname}
             </Button>
+
             <Menu
               id="simple-menu"
               elevation={0}
@@ -432,7 +434,7 @@ class HeaderLoginComponent extends Component {
                 <MenuItem onClick={this.logoutUser}>Logout</MenuItem>
               </Paper>
             </Menu>
-          </React.Fragment>
+          </div>
         )}
 
         <Modal

@@ -58,6 +58,12 @@ export function loginCustomer(contactno, password, onComplete) {
   );
 }
 
+/**
+ * This function or method is used to logout user
+ * This method interact with server configured
+ *
+ * @param {*} onComplete
+ */
 export function logoutCustomer(onComplete) {
   let userInfo = utility.getLoggedinUser();
 

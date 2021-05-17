@@ -14,10 +14,20 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
       let responseHeaders = xhr.getAllResponseHeaders();
       console.log("Response Header: " + responseHeaders);
       console.log("Response Text: " + this.responseText);
+
+      let arr = responseHeaders.trim().split(/[\r\n]+/);
+      let responseHeaderMap = {};
+      arr.forEach(function(line) {
+        let parts = line.split(": ");
+        let header = parts.shift();
+        let value = parts.join(": ");
+        responseHeaderMap[header] = value;
+      });
+
       callback(
         this.status,
         JSON.parse(this.responseText),
-        responseHeaders,
+        responseHeaderMap,
         extra
       );
     }
@@ -85,15 +95,12 @@ let getLoggedinUserMethod = () => {
  * @param {*} accessToken
  */
 let setUserSessionMethod = (response, accessToken) => {
-  console.log("setUserSessionMethod called");
   let user = {
     access_token: accessToken,
     firstname: response.first_name,
     lastname: response.last_name,
   };
-
   localStorage.setItem("user-info", JSON.stringify(user));
-
   return user;
 };
 
