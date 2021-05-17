@@ -13,7 +13,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import PropTypes from "prop-types";
 import validator from "validator";
 import Snackbar from "@material-ui/core/Snackbar";
-import serverurl from "../config/serverurl";
+import { registerCustomer, loginCustomer } from "../api/customer";
 import utility from "../utility";
 
 const loginModalStyle = {
@@ -50,6 +50,8 @@ class HeaderLoginComponent extends Component {
       loginContactno: "",
       loginPasswordRequired: "dispNone",
       loginPassword: "",
+      loginServerErrorMsgShow: "dispNone",
+      loginServerErrorMsg: "",
       firstnameRequired: "dispNone",
       firstname: "",
       lastname: "",
@@ -64,17 +66,21 @@ class HeaderLoginComponent extends Component {
       contact: "",
       messageBox: false,
       messageContent: "",
-      serverErrorMessageShow: "dispNone",
-      serverErrorMessage: "",
+      regServerErrorMsgShow: "dispNone",
+      regServerErrorMsg: "",
     };
   }
 
+  /// Field Binding/onOpenHandle/onCloseHandle Code starts here ///
+
   closeLoginModalHandler = () => {
     this.setState({ loginModalIsOpen: false });
+    this.clearLoginForm();
+    this.clearRegisterForm();
   };
 
   openLoginModal = () => {
-    this.setState({ loginModalIsOpen: true });
+    this.setState({ loginModalIsOpen: true, tabValue: 0 });
   };
 
   tabChangeHandler = (event, value) => {
@@ -109,81 +115,16 @@ class HeaderLoginComponent extends Component {
     this.setState({ contact: e.target.value });
   };
 
-  registerClickHandler = (e) => {
-    let valid = true;
-
+  handleMessageBoxClose = () => {
     this.setState({
-      serverErrorMessageShow: false,
-      serverErrorMessage: "",
+      messageContent: "",
+      messageBox: false,
     });
-
-    let firstname = this.state.firstname.trim();
-    let lastname = this.state.lastname.trim();
-    let email = this.state.email.trim();
-    let password = this.state.registerPassword.trim();
-    let contactno = this.state.contact.trim();
-
-    firstname === ""
-      ? this.setState({ firstnameRequired: "dispBlock" })
-      : this.setState({ firstnameRequired: "dispNone" });
-    email === ""
-      ? this.setState({ emailRequired: "dispBlock" })
-      : this.setState({ emailRequired: "dispNone" });
-    password === ""
-      ? this.setState({ registerPasswordRequired: "dispBlock" })
-      : this.setState({ registerPasswordRequired: "dispNone" });
-    contactno === ""
-      ? this.setState({ contactRequired: "dispBlock" })
-      : this.setState({ contactRequired: "dispNone" });
-
-    if (
-      firstname === "" ||
-      email === "" ||
-      contactno === "" ||
-      contactno === "" ||
-      password === ""
-    )
-      valid = false;
-
-    valid = this.emailCheck();
-    valid = this.passwordCheck();
-    valid = this.contactnoCheck();
-
-    if (valid)
-      this.registerUser(contactno, email, firstname, lastname, password);
   };
 
-  registerUser = (contactno, email, firstname, lastname, password) => {
-    let responseCallback = (code, response, extra) => {
-      if (code !== 201) {
-        this.setState({
-          serverErrorMessageShow: true,
-          serverErrorMessage: response.message,
-        });
-      } else {
-        this.setState({
-          messageContent: "Registered successfully! Please login now!",
-          messageBox: true,
-          tabValue: 0,
-        });
-      }
-    };
+  //** Field Binding/onOpenHandle/onCloseHandle Code ends here **//
 
-    let requestData = {
-      contact_number: contactno,
-      email_address: email,
-      first_name: firstname,
-      last_name: lastname,
-      password: password,
-    };
-
-    utility.postData(
-      serverurl.register_user,
-      responseCallback,
-      requestData,
-      null
-    );
-  };
+  /// Utility Method for Validation and etc Start Here ///
 
   contactnoCheck = () => {
     let contactno = this.state.contact.trim();
@@ -268,43 +209,151 @@ class HeaderLoginComponent extends Component {
     );
   };
 
-  loginClickHandler = (e) => {
+  clearRegisterForm = () => {
+    this.setState({
+      firstnameRequired: "dispNone",
+      firstname: "",
+      lastname: "",
+      emailRequired: "dispNone",
+      email: "",
+      registerPasswordRequired: "dispNone",
+      invalidEmailRequired: "dispNone",
+      invalidPasswordRequired: "dispNone",
+      invalidContactNoRequired: "dispNone",
+      registerPassword: "",
+      contactRequired: "dispNone",
+      contact: "",
+      regServerErrorMsgShow: "dispNone",
+      regServerErrorMsg: "",
+    });
+  };
+
+  clearLoginForm = () => {
+    this.setState({
+      loginContactnoRequired: "dispNone",
+      loginContactnoInvalid: "dispNone",
+      loginContactno: "",
+      loginPasswordRequired: "dispNone",
+      loginPassword: "",
+      loginServerErrorMsgShow: "dispNone",
+      loginServerErrorMsg: "",
+    });
+  };
+
+  //** Utility Method for Validation and etc End Here **//
+
+  /// Button onClick Method Start Here ///
+
+  onRegisterRequestComplete = (code, response) => {
+    if (code !== 201) {
+      this.setState({
+        regServerErrorMsgShow: true,
+        regServerErrorMsg: response.message,
+      });
+    } else {
+      this.setState({
+        messageContent: "Registered successfully! Please login now!",
+        messageBox: true,
+        tabValue: 0,
+      });
+      this.clearRegisterForm();
+    }
+  };
+
+  registerClickHandler = (e) => {
     let valid = true;
-    this.state.loginContactno.trim() === ""
-      ? this.setState({ loginContactnoRequired: "dispBlock" })
-      : this.setState({ loginContactnoRequired: "dispNone" });
-    this.state.loginPassword.trim() === ""
-      ? this.setState({ loginPasswordRequired: "dispBlock" })
-      : this.setState({ loginPasswordRequired: "dispNone" });
+
+    this.setState({
+      regServerErrorMsgShow: false,
+      regServerErrorMsg: "",
+    });
+
+    let firstname = this.state.firstname.trim();
+    let lastname = this.state.lastname.trim();
+    let email = this.state.email.trim();
+    let password = this.state.registerPassword.trim();
+    let contactno = this.state.contact.trim();
+
+    firstname === ""
+      ? this.setState({ firstnameRequired: "dispBlock" })
+      : this.setState({ firstnameRequired: "dispNone" });
+    email === ""
+      ? this.setState({ emailRequired: "dispBlock" })
+      : this.setState({ emailRequired: "dispNone" });
+    password === ""
+      ? this.setState({ registerPasswordRequired: "dispBlock" })
+      : this.setState({ registerPasswordRequired: "dispNone" });
+    contactno === ""
+      ? this.setState({ contactRequired: "dispBlock" })
+      : this.setState({ contactRequired: "dispNone" });
 
     if (
-      this.state.loginContactno.trim() === "" ||
-      this.state.loginPassword.trim() === ""
+      firstname === "" ||
+      email === "" ||
+      contactno === "" ||
+      contactno === "" ||
+      password === ""
     )
       valid = false;
 
-    valid = this.loginContactnoCheck();
+    valid = this.emailCheck();
+    valid = this.passwordCheck();
+    valid = this.contactnoCheck();
 
-    if (valid) {
+    if (valid)
+      registerCustomer(
+        contactno,
+        email,
+        firstname,
+        lastname,
+        password,
+        this.onRegisterRequestComplete
+      );
+  };
+
+  onLoginRequestComplete = (code, response, responseHeader) => {
+    if (code === 200) {
+      utility.setUserSession(response, responseHeader["access-token"]);
+
       this.setState({
         messageContent: "Logged in successfully!",
         messageBox: true,
       });
+
+      this.closeLoginModalHandler();
+    } else {
+      this.setState({
+        loginServerErrorMsgShow: "dispBlock",
+        loginServerErrorMsg: response.message,
+      });
     }
   };
 
-  handleMessageBoxClose = () => {
+  loginClickHandler = (e) => {
+    let valid = true;
     this.setState({
-      messageContent: "",
-      messageBox: false,
+      loginServerErrorMsgShow: "dispNone",
+      loginServerErrorMsg: "",
     });
 
-    this.setState({
-      serverErrorMessageShow: true,
-      serverErrorMessage:
-        "This contact number is already registered! Try other contact number.",
-    });
+    let contactno = this.state.loginContactno.trim();
+    let password = this.state.loginPassword.trim();
+
+    contactno === ""
+      ? this.setState({ loginContactnoRequired: "dispBlock" })
+      : this.setState({ loginContactnoRequired: "dispNone" });
+    password === ""
+      ? this.setState({ loginPasswordRequired: "dispBlock" })
+      : this.setState({ loginPasswordRequired: "dispNone" });
+
+    if (contactno === "" || password === "") valid = false;
+
+    valid = this.loginContactnoCheck();
+
+    if (valid) loginCustomer(contactno, password, this.onLoginRequestComplete);
   };
+
+  //** Button onClick Method End Here **//
 
   render() {
     return (
@@ -334,8 +383,11 @@ class HeaderLoginComponent extends Component {
             <Tab label="login" />
             <Tab label="Signup" />
           </Tabs>
-          {this.state.tabValue === 0 && (
-            <TabContainer>
+
+          <div className={this.state.tabValue === 0 ? "dispBlock" : "dispNone"}>
+            <TabContainer
+              className={this.state.tabValue === 0 ? "dispBlock" : "dispNone"}
+            >
               <FormControl required className="login-form-control">
                 <InputLabel htmlFor="contactno">Contact No.</InputLabel>
                 <Input
@@ -357,7 +409,7 @@ class HeaderLoginComponent extends Component {
                 <InputLabel htmlFor="password">Password</InputLabel>
                 <Input
                   id="password"
-                  type="text"
+                  type="password"
                   className="modal-l-input"
                   onChange={this.inputPasswordChangeHandler}
                 />
@@ -366,6 +418,11 @@ class HeaderLoginComponent extends Component {
                 </FormHelperText>
               </FormControl>
               <br />
+              <FormControl required className="login-form-control mg-top-10">
+                <FormHelperText className={this.state.loginServerErrorMsgShow}>
+                  <span className="red">{this.state.loginServerErrorMsg}</span>
+                </FormHelperText>
+              </FormControl>
               <br />
               <br />
               <Button
@@ -376,9 +433,9 @@ class HeaderLoginComponent extends Component {
                 LOGIN
               </Button>
             </TabContainer>
-          )}
+          </div>
 
-          {this.state.tabValue === 1 && (
+          <div className={this.state.tabValue === 1 ? "dispBlock" : "dispNone"}>
             <TabContainer>
               <FormControl required className="login-form-control">
                 <InputLabel htmlFor="firstname">First Name</InputLabel>
@@ -386,6 +443,7 @@ class HeaderLoginComponent extends Component {
                   id="firstname"
                   type="text"
                   className="modal-l-input"
+                  value={this.state.firstname ? this.state.firstname : ""}
                   onChange={this.inputFirstNameChangeHandler}
                 />
                 <FormHelperText className={this.state.firstnameRequired}>
@@ -400,6 +458,7 @@ class HeaderLoginComponent extends Component {
                   id="lastname"
                   type="text"
                   className="modal-l-input"
+                  value={this.state.lastname ? this.state.lastname : ""}
                   onChange={this.inputLastNameChangeHandler}
                 />
               </FormControl>
@@ -411,6 +470,7 @@ class HeaderLoginComponent extends Component {
                   id="email"
                   type="text"
                   className="modal-l-input"
+                  value={this.state.email ? this.state.email : ""}
                   onChange={this.inputEmailChangeHandler}
                 />
                 <FormHelperText className={this.state.emailRequired}>
@@ -428,6 +488,11 @@ class HeaderLoginComponent extends Component {
                   id="registerPassword"
                   type="password"
                   className="modal-l-input"
+                  value={
+                    this.state.registerPassword
+                      ? this.state.registerPassword
+                      : ""
+                  }
                   onChange={this.inputRegisterPasswordChangeHandler}
                 />
                 <FormHelperText className={this.state.registerPasswordRequired}>
@@ -448,6 +513,7 @@ class HeaderLoginComponent extends Component {
                   id="contact"
                   type="text"
                   className="modal-l-input"
+                  value={this.state.contact ? this.state.contact : ""}
                   onChange={this.inputContactChangeHandler}
                 />
                 <FormHelperText className={this.state.contactRequired}>
@@ -462,8 +528,8 @@ class HeaderLoginComponent extends Component {
               </FormControl>
               <br />
               <FormControl required className="login-form-control mg-top-10">
-                <FormHelperText className={this.state.serverErrorMessageShow}>
-                  <span className="red">{this.state.serverErrorMessage}</span>
+                <FormHelperText className={this.state.regServerErrorMsgShow}>
+                  <span className="red">{this.state.regServerErrorMsg}</span>
                 </FormHelperText>
               </FormControl>
               <br />
@@ -476,7 +542,7 @@ class HeaderLoginComponent extends Component {
                 SIGNUP
               </Button>
             </TabContainer>
-          )}
+          </div>
         </Modal>
 
         <Snackbar

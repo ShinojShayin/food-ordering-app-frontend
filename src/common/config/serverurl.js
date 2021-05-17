@@ -1,10 +1,6 @@
-let baseurl = "http://localhost:8080/api";
-let login_user_url = baseurl + "/customer/login";
-let register_user_url = baseurl + "/customer/signup";
+let base = "http://localhost:8080/api";
+let LOGIN_CUSTOMER = base + "/customer/login";
+let REGISTER_CUSTOMER = base + "/customer/signup";
 
-let serverurl = {
-  login_user: login_user_url,
-  register_user: register_user_url,
-};
-
-export default serverurl;
+export const LOGIN_CUSTOMER_URL = LOGIN_CUSTOMER;
+export const REGISTER_CUSTOMER_URL = REGISTER_CUSTOMER;
