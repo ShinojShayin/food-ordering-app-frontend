@@ -20,6 +20,7 @@ class HeaderSearchComponent extends Component {
       <div className="searchContainer">
         <Input
           id="search-item"
+          onChange={(e) => this.props.searchRestaurantByTitle(e.target.value)}
           type="text"
           classes={{
             root: classes.inputRoot,

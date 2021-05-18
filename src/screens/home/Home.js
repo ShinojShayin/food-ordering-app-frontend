@@ -9,9 +9,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Icon,
 } from "@material-ui/core";
-import { Star } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
@@ -47,14 +45,41 @@ class Home extends Component {
         obj.visible = true;
         obj.categories = obj.categories.replaceAll(",", ", ");
       });
-      this.props.updateRestaurantList(restaurantList);
+      this.setState({ restaurantList });
     } else {
       console.log("response: " + JSON.stringify(response));
     }
   };
 
+  searchRestaurantByTitle = (title) => {
+    let restaurantList = this.state.restaurantList;
+    if (!title || title === "") {
+      restaurantList.forEach((restaurant, index) => {
+        restaurant.visible = true;
+      });
+    } else {
+      restaurantList.forEach((restaurant, index) => {
+        if (
+          restaurant.restaurant_name &&
+          restaurant.restaurant_name
+            .toUpperCase()
+            .indexOf(title.toUpperCase()) > -1
+        ) {
+          restaurant.visible = true;
+        } else {
+          restaurant.visible = false;
+        }
+      });
+    }
+
+    this.setState({ restaurantList });
+  };
+
   constructor(props) {
     super(props);
+    this.state = {
+      restaurantList: [],
+    };
     getAllRestaurant(this.onGetAllRestaurantRequestComplete);
   }
 
@@ -66,22 +91,21 @@ class Home extends Component {
         <Header
           userInfo={this.props.userInfo}
           updateUserInfoState={this.props.updateUserInfoState}
-          restaurantList={this.props.restaurantList}
-          updateRestaurantList={this.props.updateRestaurantList}
+          searchRestaurantByTitle={this.searchRestaurantByTitle}
         />
 
         <Grid
           alignContent="center"
           container
-          spacing="5"
+          spacing={5}
           justify="flex-start"
           direction="row"
           className={classes.girdContainer}
         >
-          {this.props.restaurantList.map(
+          {this.state.restaurantList.map(
             (restaurant, index) =>
               restaurant.visible === true && (
-                <Grid item md="4" lg="3" sm="5" key={"grid_" + index}>
+                <Grid item md={4} lg={3} sm={5} key={"grid_" + index}>
                   <Card key={"card_" + index} className={classes.root}>
                     <CardActionArea>
                       <CardMedia

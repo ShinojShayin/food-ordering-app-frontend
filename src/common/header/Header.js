@@ -18,7 +18,9 @@ class Header extends Component {
           <Fastfood className="logo-icon" />
 
           <div className="fbar-search-container">
-            <HeaderSearchComponent />
+            <HeaderSearchComponent
+              searchRestaurantByTitle={this.props.searchRestaurantByTitle}
+            />
           </div>
 
           <HeaderLoginComponent
