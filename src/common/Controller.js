@@ -12,11 +12,18 @@ class Controller extends Component {
     });
   };
 
+  updateRestaurantList = (restaurantList) => {
+    this.setState({
+      restaurantList: restaurantList,
+    });
+  };
+
   constructor(props) {
     super(props);
     let userInfoObj = utility.getLoggedinUser();
     this.state = {
       userInfo: userInfoObj,
+      restaurantList: [],
     };
   }
 
@@ -31,6 +38,8 @@ class Controller extends Component {
               {...props}
               userInfo={this.state.userInfo}
               updateUserInfoState={this.updateUserInfoState}
+              restaurantList={this.state.restaurantList}
+              updateRestaurantList={this.updateRestaurantList}
             />
           )}
         />

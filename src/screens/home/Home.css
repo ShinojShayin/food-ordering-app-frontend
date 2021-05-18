@@ -1,0 +1,20 @@
+.hashtag-text {
+  margin-top: 5px !important;
+  margin-bottom: 30px !important;
+}
+
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+.rating-tag {
+  background-color: #eacc5e;
+  padding: 7px 18px 7px 18px;
+  color: white !important;
+  font-size: 0.9em;
+}
+
+.price-tag {
+  padding-top: 6px;
+  font-size: 0.93em;
+}

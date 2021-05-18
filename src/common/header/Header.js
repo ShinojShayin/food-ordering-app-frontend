@@ -11,7 +11,7 @@ class Header extends Component {
     return (
       <AppBar
         position="static"
-        style={{ backgroundColor: "#263238" }}
+        style={{ backgroundColor: "#263238", boxShadow: "none" }}
         className="fbar-header"
       >
         <Toolbar>
