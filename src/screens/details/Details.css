@@ -1,0 +1,32 @@
+.container{
+    display: flex;
+    /* align-items: flex-start; */
+    /* justify-content: left; */
+    background-color: lightgray;
+    padding: 1%;
+}
+.img{
+    max-width: 100%;
+}
+.image{
+    flex-basis: 30%;
+}
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin-left: 30px;
+}
+.res_Name{
+    font-size:xx-large;
+    font-weight: bold;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.locality{
+    font-size:larger;
+    font-weight:bold; 
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.category{
+    font-size:medium;
+
+}
