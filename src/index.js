@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 import Controller from "./common/Controller";
-import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(<Controller />, document.getElementById("root"));
 
