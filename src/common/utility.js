@@ -10,26 +10,33 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
   console.log("fetchDataMethod called");
   let xhr = new XMLHttpRequest();
   xhr.addEventListener("readystatechange", function() {
+    console.log("this.readyState " + this.readyState);
+    console.log(" this.status " + this.status);
     if (this.readyState === 4) {
       let responseHeaders = xhr.getAllResponseHeaders();
       console.log("Response Header: " + responseHeaders);
       console.log("Response Text: " + this.responseText);
 
-      let arr = responseHeaders.trim().split(/[\r\n]+/);
       let responseHeaderMap = {};
-      arr.forEach(function(line) {
-        let parts = line.split(": ");
-        let header = parts.shift();
-        let value = parts.join(": ");
-        responseHeaderMap[header] = value;
-      });
 
-      callback(
-        this.status,
-        JSON.parse(this.responseText),
-        responseHeaderMap,
-        extra
-      );
+      if (this.status !== 0) {
+        let arr = responseHeaders.trim().split(/[\r\n]+/);
+        arr.forEach(function(line) {
+          let parts = line.split(": ");
+          let header = parts.shift();
+          let value = parts.join(": ");
+          responseHeaderMap[header] = value;
+        });
+
+        callback(
+          this.status,
+          JSON.parse(this.responseText),
+          responseHeaderMap,
+          extra
+        );
+      } else {
+        callback(this.status, null, responseHeaderMap, extra);
+      }
     }
   });
   console.log("url: " + reqObject.url);
@@ -44,7 +51,11 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
       xhr.setRequestHeader(key, reqObject.headers[key]);
     });
   }
-  xhr.send(JSON.stringify(data));
+  try {
+    xhr.send(JSON.stringify(data));
+  } catch (e) {
+    console.log("sd" + e);
+  }
 };
 
 /**
