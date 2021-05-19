@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Fastfood from "@material-ui/icons/Fastfood";
 import HeaderSearchComponent from "./HeaderSearchComponent";
 import HeaderLoginComponent from "./HeaderLoginComponent";
+import { Link } from "react-router-dom";
 
 class Header extends Component {
   render() {
@@ -15,7 +16,9 @@ class Header extends Component {
         className="fbar-header"
       >
         <Toolbar>
-          <Fastfood className="logo-icon" />
+          <Link to="/">
+            <Fastfood className="logo-icon" />
+          </Link>
 
           <div className="fbar-search-container">
             <HeaderSearchComponent

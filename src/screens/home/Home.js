@@ -45,14 +45,20 @@ class Home extends Component {
         obj.visible = true;
         obj.categories = obj.categories.replaceAll(",", ", ");
       });
+
+      if (!restaurantList || restaurantList.length === 0)
+        this.setState({ noDataNote: "dispBlock" });
+
       this.setState({ restaurantList });
     } else {
+      this.setState({ noDataNote: "dispBlock" });
       console.log("response: " + JSON.stringify(response));
     }
   };
 
   searchRestaurantByTitle = (title) => {
     let restaurantList = this.state.restaurantList;
+    let hiddenCount = 0;
     if (!title || title === "") {
       restaurantList.forEach((restaurant, index) => {
         restaurant.visible = true;
@@ -68,8 +74,15 @@ class Home extends Component {
           restaurant.visible = true;
         } else {
           restaurant.visible = false;
+          hiddenCount++;
         }
       });
+    }
+
+    if (hiddenCount === restaurantList.length) {
+      this.setState({ noDataNote: "dispBlock" });
+    } else {
+      this.setState({ noDataNote: "dispNone" });
     }
 
     this.setState({ restaurantList });
@@ -79,6 +92,7 @@ class Home extends Component {
     super(props);
     this.state = {
       restaurantList: [],
+      noDataNote: "dispNone",
     };
     getAllRestaurant(this.onGetAllRestaurantRequestComplete);
   }
@@ -92,6 +106,7 @@ class Home extends Component {
           userInfo={this.props.userInfo}
           updateUserInfoState={this.props.updateUserInfoState}
           searchRestaurantByTitle={this.searchRestaurantByTitle}
+          screen="home"
         />
 
         <Grid
@@ -155,6 +170,14 @@ class Home extends Component {
                 </Grid>
               )
           )}
+          <Typography
+            gutterBottom
+            variant="body1"
+            className={this.state.noDataNote}
+            style={{ marginTop: 20 }}
+          >
+            No Restaurant with the given name
+          </Typography>
         </Grid>
       </div>
     );
