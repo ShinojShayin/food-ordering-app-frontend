@@ -58,6 +58,17 @@ class Controller extends Component {
             />
           )}
         />
+        <Route
+          exact
+          path="/checkout"
+          render={(props) => (
+            <Checkout
+              {...props}
+              userInfo={this.state.userInfo}
+              updateUserInfoState={this.updateUserInfoState}
+            />
+          )}
+        />
       </Router>
     );
   }

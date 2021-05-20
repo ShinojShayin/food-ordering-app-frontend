@@ -85,6 +85,19 @@ let postDataMethod = (reqObject, data, callback, extra) => {
 };
 
 /**
+ * This method uses above mentioned fetchDataMethod to perform PUT Request
+ *
+ * @Param reqObject - ex: {url:"http://google.com", "headers": {Content-Type: "Application/Json"}}
+ * @Param data - This should contain request body
+ * @Param callback - On successfull request completion this callback method is called
+ * @Param extra - Any extra data which require when callback method is invoked is passed through this variable
+ *  */
+let putDataMethod = (reqObject, data, callback, extra) => {
+  reqObject.method = "PUT";
+  fetchDataMethod(reqObject, data, callback, extra);
+};
+
+/**
  * This method return user object if user is loggedin
  *
  * @returns user - {
@@ -126,6 +139,7 @@ let logoutUserMethod = () => {
 let utility = {
   getData: getDataMethod,
   postData: postDataMethod,
+  putData: putDataMethod,
   getLoggedinUser: getLoggedinUserMethod,
   setUserSession: setUserSessionMethod,
   logoutUser: logoutUserMethod,
