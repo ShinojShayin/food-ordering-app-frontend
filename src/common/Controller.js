@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import utility from "./utility";
 import Home from "../screens/home/Home";
 import Profile from "../screens/profile/Profile";
 import Details from "../screens/details/Details";
-import utility from "./utility";
+import Checkout from "../screens/checkout/Checkout";
 
 class Controller extends Component {
   // All Server Url used in this application is added in a single file. Check /common/config/serverurl.js.
@@ -57,6 +58,11 @@ class Controller extends Component {
               updateUserInfoState={this.updateUserInfoState}
             />
           )}
+        />
+        <Route
+          exact
+          path="/checkout"
+          render={(props) => <Checkout {...props} />}
         />
       </Router>
     );
