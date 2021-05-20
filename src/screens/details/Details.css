@@ -1,32 +1,43 @@
-.container{
-    display: flex;
-    /* align-items: flex-start; */
-    /* justify-content: left; */
-    background-color: lightgray;
-    padding: 1%;
+#rst-photo {
+  height: 200px;
+  width: 250px;
 }
-.img{
-    max-width: 100%;
-}
-.image{
-    flex-basis: 30%;
-}
-.grid{
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    margin-left: 30px;
-}
-.res_Name{
-    font-size:xx-large;
-    font-weight: bold;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-.locality{
-    font-size:larger;
-    font-weight:bold; 
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
-.category{
-    font-size:medium;
 
+.rst-top-section {
+  margin-top: 0px !important;
+  background-color: lavender;
+  padding: 20px 10px 10px 30px;
+}
+
+.rst-details-mid {
+  margin-left: 50px !important;
+  padding-top: 20px !important;
+}
+
+.rst-details-left {
+  padding: 10px 10px 10px 10px;
+}
+
+.rst-location {
+  letter-spacing: 1.4px !important;
+  font-size: 0.9em !important;
+  margin-top: 8px !important;
+}
+
+.rst-name {
+  font-size: 1.8em !important;
+}
+
+.rst-categories {
+  margin-top: 20px !important;
+  font-size: 0.9em !important;
+  margin-bottom: 1em !important;
+}
+
+.rst-rating-text {
+  color: grey;
+  letter-spacing: 0.1px !important;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-top: 5px;
 }

@@ -13,6 +13,7 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
   girdContainer: {
@@ -121,52 +122,54 @@ class Home extends Component {
             (restaurant, index) =>
               restaurant.visible === true && (
                 <Grid item md={4} lg={3} sm={5} key={"grid_" + index}>
-                  <Card key={"card_" + index} className={classes.root}>
-                    <CardActionArea>
-                      <CardMedia
-                        className={classes.media}
-                        image={restaurant.photo_URL}
-                        title={restaurant.restaurant_name}
-                      />
-                      <CardContent className={classes.cardcontent}>
-                        <Typography
-                          gutterBottom
-                          variant="h5"
-                          component="h5"
-                          className={classes.cardTitle}
-                        >
-                          {restaurant.restaurant_name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textPrimary"
-                          component="div"
-                          className="hashtag-text"
-                        >
-                          {restaurant.categories}
-                        </Typography>
+                  <Link to={"/restaurant/" + restaurant.id}>
+                    <Card key={"card_" + index} className={classes.root}>
+                      <CardActionArea>
+                        <CardMedia
+                          className={classes.media}
+                          image={restaurant.photo_URL}
+                          title={restaurant.restaurant_name}
+                        />
+                        <CardContent className={classes.cardcontent}>
+                          <Typography
+                            gutterBottom
+                            variant="h5"
+                            component="h5"
+                            className={classes.cardTitle}
+                          >
+                            {restaurant.restaurant_name}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="textPrimary"
+                            component="div"
+                            className="hashtag-text"
+                          >
+                            {restaurant.categories}
+                          </Typography>
 
-                        <div className="card-bottom">
-                          <span className="rating-tag">
-                            <FontAwesomeIcon
-                              className="starIcon"
-                              icon={faStar}
-                            />
-                            &nbsp; {restaurant.customer_rating} (
-                            {restaurant.number_customers_rated})
-                          </span>
+                          <div className="card-bottom">
+                            <span className="rating-tag">
+                              <FontAwesomeIcon
+                                className="starIcon"
+                                icon={faStar}
+                              />
+                              &nbsp; {restaurant.customer_rating} (
+                              {restaurant.number_customers_rated})
+                            </span>
 
-                          <span className="price-tag">
-                            <FontAwesomeIcon
-                              className="starIcon"
-                              icon={faRupeeSign}
-                            />
-                            {restaurant.average_price} for two
-                          </span>
-                        </div>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
+                            <span className="price-tag">
+                              <FontAwesomeIcon
+                                className="starIcon"
+                                icon={faRupeeSign}
+                              />
+                              {restaurant.average_price} for two
+                            </span>
+                          </div>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Link>
                 </Grid>
               )
           )}

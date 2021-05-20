@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "../screens/home/Home";
 import Profile from "../screens/profile/Profile";
+import Details from "../screens/details/Details";
 import utility from "./utility";
 
 class Controller extends Component {
@@ -40,6 +41,17 @@ class Controller extends Component {
           path="/profile"
           render={(props) => (
             <Profile
+              {...props}
+              userInfo={this.state.userInfo}
+              updateUserInfoState={this.updateUserInfoState}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/restaurant/:restaurantid"
+          render={(props) => (
+            <Details
               {...props}
               userInfo={this.state.userInfo}
               updateUserInfoState={this.updateUserInfoState}

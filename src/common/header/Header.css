@@ -2,6 +2,7 @@ a {
   text-decoration: none;
   color: inherit !important;
 }
+
 .fbar-header,
 .fbar-search-container {
   flex-grow: 1;
