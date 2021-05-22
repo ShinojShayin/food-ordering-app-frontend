@@ -11,6 +11,7 @@ import {
   Card,
   CardContent,
   Badge,
+  Button,
 } from "@material-ui/core";
 import { getRestaurantById } from "../../common/api/restaurant";
 import AddIcon from "@material-ui/icons/Add";
@@ -48,12 +49,79 @@ class Details extends Component {
     }
   };
 
+  removeItemFromCart = (cartItemId, price) => {
+    let cartlist = this.state.cartItemlist;
+    for (let i = 0, size = cartlist.length; i <= size - 1; i++) {
+      if (cartlist[i].itemid === cartItemId) {
+        cartlist.splice(i, 1);
+        break;
+      }
+    }
+
+    let totalItems = this.state.totalCartItems - 1;
+    let totalPrice = this.state.totalBillPrice - price;
+
+    this.setState({
+      cartItemlist: cartlist,
+      totalCartItems: totalItems,
+      totalBillPrice: totalPrice,
+    });
+  };
+
+  addItemToCart = (itemid, name, type, price) => {
+    let cartlist = this.state.cartItemlist;
+
+    let itemPresent = false;
+    let itemFound = null;
+    if (cartlist.length > 0) {
+      for (let i = 0, size = cartlist.length; i < size; i++) {
+        if (cartlist[i].itemid === itemid) {
+          itemFound = cartlist[i];
+          itemPresent = true;
+          break;
+        }
+      }
+    }
+
+    if (itemPresent) {
+      itemFound.quantity += 1;
+    } else {
+      let newItem = {
+        itemname: name,
+        itemid: itemid,
+        price: price,
+        itemtype: type,
+        quantity: 1,
+      };
+
+      cartlist.push(newItem);
+    }
+
+    let totalItems = this.state.totalCartItems + 1;
+    let totalPrice = this.state.totalBillPrice + price;
+    this.setState({
+      cartItemlist: cartlist,
+      totalCartItems: totalItems,
+      totalBillPrice: totalPrice,
+    });
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       restaurantDetails: {},
       categoryRestaurantlist: [],
       totalCartItems: 0,
+      totalBillPrice: 0,
+      cartItemlist: [
+        // {
+        //   itemname: "Hakka Noodles",
+        //   itemid: 1,
+        //   price: 204.0,
+        //   itemtype: "VEG",
+        //   quantity: 1,
+        // },
+      ],
     };
     getRestaurantById(
       this.props.match.params.restaurantid,
@@ -74,7 +142,7 @@ class Details extends Component {
         {/**  Restaurant Information Part Start Here **/}
 
         <Grid container spacing={2} className="rst-top-section">
-          <Grid item xl={3} lg={2} class="rst-image">
+          <Grid item xl={3} lg={2} className="rst-image">
             <img
               src={this.state.restaurantDetails.photo}
               id="rst-photo"
@@ -113,8 +181,8 @@ class Details extends Component {
             </Grid>
 
             <Grid item xs={12}>
-              <div class="rst-details-bottom">
-                <div class="rst-rating-content">
+              <div className="rst-details-bottom">
+                <div className="rst-rating-content">
                   <div>
                     <i
                       aria-hidden="true"
@@ -123,7 +191,7 @@ class Details extends Component {
                     />
                     {this.state.restaurantDetails.rating}
                   </div>
-                  <div class="rst-caption grey">
+                  <div className="rst-caption grey">
                     Average Rating by <br />
                     <strong>
                       {this.state.restaurantDetails.numratedcustomers + " "}
@@ -132,7 +200,7 @@ class Details extends Component {
                   </div>
                 </div>
 
-                <div class="rst-rating-content">
+                <div className="rst-rating-content">
                   <div>
                     <i aria-hidden="true" className="fa fa-inr rupee-icon" />
                     {" " + this.state.restaurantDetails.averageprice}
@@ -154,13 +222,16 @@ class Details extends Component {
 
           <Grid item lg={6} xs={12} style={{ marginTop: "25px" }}>
             {this.state.categoryRestaurantlist.map((category, catIndex) => (
-              <div className="food-item-container">
+              <div
+                key={"categoryitem-" + catIndex}
+                className="food-item-container"
+              >
                 <div className="food-item-category rst-caption">
                   {category.category_name}
                 </div>
                 <Divider className="item-divide" />
                 {category.item_list.map((item, itemIndex) => (
-                  <div class="food-item-list">
+                  <div key={"fooditem-" + itemIndex} className="food-item-list">
                     <div className="food-item-name">
                       {item.item_type === "VEG" ? (
                         <i
@@ -217,23 +288,82 @@ class Details extends Component {
                   <strong> My Cart</strong>
                 </Typography>
                 <div className="cart-item-container">
-                  <div className="food-item-list">
-                    <div>
-                      <i
-                        className="fa fa-stop-circle-o"
-                        style={{
-                          color: "green",
-                          width: "1",
-                          height: "1",
-                        }}
-                        aria-hidden="true"
-                      />
-                      Hakka Noodles
+                  {this.state.cartItemlist.map((cartitem, itemindex) => (
+                    <div
+                      key={"cartitem-" + itemindex}
+                      className="cart-item-list"
+                    >
+                      <div className="cart-item-name grey">
+                        {cartitem.itemtype === "VEG" ? (
+                          <i
+                            className="fa fa-stop-circle-o item-icon veg"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <i
+                            className="fa fa-stop-circle-o item-icon non-veg"
+                            aria-hidden="true"
+                          />
+                        )}
+                        {cartitem.itemname}
+                      </div>
+                      <div className="cart-item-action">
+                        <IconButton
+                          className="item-ops"
+                          onClick={() =>
+                            this.removeItemFromCart(
+                              cartitem.itemid,
+                              cartitem.price
+                            )
+                          }
+                        >
+                          <i className="fa fa-minus" aria-hidden="true" />
+                        </IconButton>
+                        {cartitem.quantity}
+                        <IconButton
+                          className="item-ops"
+                          onClick={() =>
+                            this.addItemToCart(
+                              cartitem.itemid,
+                              cartitem.itemname,
+                              cartitem.itemtype,
+                              cartitem.price
+                            )
+                          }
+                        >
+                          <i className="fa fa-plus" aria-hidden="true" />
+                        </IconButton>
+                      </div>
+                      <div className="cart-item-price grey">
+                        <i
+                          aria-hidden="true"
+                          className="fa fa-inr rupee-icon"
+                        />
+                        {" " + cartitem.price.toFixed(2)}
+                      </div>
                     </div>
-                    <div> - 1 +</div>
-                    <div>204.00</div>
+                  ))}
+                </div>
+
+                <div className="total-price-summary">
+                  <div className="total-amount-txt">
+                    <strong>TOTAL AMOUNT</strong>
+                  </div>
+                  <div>
+                    <i aria-hidden="true" className="fa fa-inr rupee-icon" />
+                    <strong>
+                      {" " + this.state.totalBillPrice.toFixed(2)}
+                    </strong>
                   </div>
                 </div>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="checkout-btn"
+                >
+                  CHECKOUT
+                </Button>
               </CardContent>
             </Card>
           </Grid>
