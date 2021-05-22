@@ -9,9 +9,20 @@
   padding: 20px 10px 10px 30px;
 }
 
-.rst-details-mid {
+.rst-details-header {
   margin-left: 50px !important;
   padding-top: 20px !important;
+}
+
+.rst-rating-content {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.rst-details-bottom {
+  display: flex;
+  flex-direction: row;
 }
 
 .rst-details-left {
@@ -29,15 +40,131 @@
 }
 
 .rst-categories {
-  margin-top: 20px !important;
+  margin-top: 0.9em !important;
   font-size: 0.9em !important;
   margin-bottom: 1em !important;
 }
 
-.rst-rating-text {
-  color: grey;
-  letter-spacing: 0.1px !important;
+.rst-caption {
+  letter-spacing: 0.4px !important;
   text-transform: uppercase;
-  font-size: 0.8em;
+  font-size: 0.73em;
   margin-top: 5px;
+  font-weight: 450;
+  word-spacing: 0.1em !important;
+}
+
+.grey {
+  color: grey;
+}
+
+.rst-image {
+  margin-left: 2% !important;
+}
+
+.food-item-container {
+  padding-left: 12%;
+  padding-top: 1%;
+  width: 75%;
+}
+
+.food-item-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.food-item-category {
+  letter-spacing: 0.07em !important;
+  margin-bottom: 7px;
+}
+
+.food-type-icon {
+  margin-right: 15px;
+}
+
+.food-item-name {
+  width: 70%;
+  text-transform: capitalize;
+}
+
+.food-cost {
+  margin-right: 6%;
+}
+
+.non-veg {
+  color: #be4a47;
+}
+
+.veg {
+  color: #5a9a5a;
+}
+
+.item-divide {
+  margin-bottom: 15px !important;
+}
+
+.rupee-icon {
+  font-size: 15px !important;
+}
+.star-icon {
+  font-size: 15px !important;
+}
+
+.food-card {
+  min-height: 100px;
+  max-width: 650px;
+}
+
+.cart-container {
+  margin-top: 30px !important;
+  padding-left: 30px !important;
+}
+
+.cart-badge {
+  top: -20px;
+  right: 2px;
+}
+
+.cart-icon-span {
+  margin-right: 15px;
+  vertical-align: sub;
+}
+
+.food-card-body {
+  padding-top: 25px !important;
+}
+
+@media (max-width: 730px) {
+  .rst-top-section {
+    justify-content: center;
+    padding: 0 !important;
+  }
+  .rst-image {
+    text-align: center !important;
+    margin-left: 0 !important;
+  }
+  #rst-photo {
+    height: inherit !important;
+    width: 60% !important;
+    margin-left: 0 !important;
+  }
+  .rst-details-header {
+    text-align: center;
+    margin-left: 0px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  #rst-photo {
+    width: 70% !important;
+  }
+  .rst-image {
+    padding-top: 3%;
+  }
+
+  .rst-details-header {
+    padding-left: 0px !important;
+  }
 }

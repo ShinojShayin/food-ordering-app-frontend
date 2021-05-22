@@ -21,10 +21,12 @@ class Header extends Component {
           </Link>
 
           <div className="fbar-search-container">
-            {this.props.screen === "home" && (
+            {this.props.screen === "home" ? (
               <HeaderSearchComponent
                 searchRestaurantByTitle={this.props.searchRestaurantByTitle}
               />
+            ) : (
+              <span>&nbsp;</span>
             )}
           </div>
 
