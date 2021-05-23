@@ -153,6 +153,7 @@ class Details extends Component {
 
         let cartObject = {
           restaurantid: this.props.match.params.restaurantid,
+          restaurantname: this.state.restaurantDetails.name,
           bill: this.state.totalBillPrice,
           item_quantities: itemList,
         };
