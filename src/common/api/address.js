@@ -3,7 +3,7 @@ import {
   CHECKOUT_ALL_STATES_URL,
   CHECKOUT_ADD_ADDRESS_URL
 } from "../config/serverurl";
-import utility from "../utility";
+import utility from "./utility";
 
 export function getAllSavedAddress(onComplete) {
   let userInfo = utility.getLoggedinUser();
