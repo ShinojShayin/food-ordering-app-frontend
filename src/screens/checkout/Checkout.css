@@ -1,24 +1,46 @@
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 4px;
 }
-
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb {
     background: grey;
     border-radius: 10px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
     background: grey;
-} */
-/* .movie-poster {
+} 
+ .movie-poster {
     height: 100%;
     width: auto;
-} */
+}
+@media (max-width: 992px) {
+    .flex-container {
+        flex-direction: column;
+    }
+    .left {
+        width: 100%;
+    }
+    .right {
+        width: 90%;
+    }
+    .released-movie-grid-item {
+        margin: 8px;
+    }
+}
+.dispNone {
+    display: none;
+}
+
+.dispBlock {
+    display: block;
+}
+
+.red {
+    color: red;
+}
 .flex-container {
     display: flex;
 }
@@ -38,21 +60,4 @@
 
 .released-movie-grid-item {
     margin: 15px;
-}
-
-
-
-@media (max-width: 992px) {
-    .flex-container {
-        flex-direction: column;
-    }
-    .left {
-        width: 100%;
-    }
-    .right {
-        width: 90%;
-    }
-    .released-movie-grid-item {
-        margin: 8px;
-    }
 }
