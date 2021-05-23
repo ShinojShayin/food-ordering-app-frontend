@@ -17,7 +17,6 @@ import {
 import { getRestaurantById } from "../../common/api/restaurant";
 import AddIcon from "@material-ui/icons/Add";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import { Link } from "react-router-dom";
 
 const styles = (theme) => ({});
 
@@ -172,23 +171,31 @@ class Details extends Component {
 
   constructor(props) {
     super(props);
+
+    /**  Object structure inside cartItemlist array 
+      *   {
+            itemname: "Hakka Noodles",
+            itemid: 1,
+            price: 204.0,
+            itemtype: "VEG",
+            quantity: 1,
+          }
+      */
+
     this.state = {
-      restaurantDetails: {},
+      restaurantDetails: {
+        categories: "",
+        averageprice: 0,
+        numratedcustomers: 0,
+      },
       categoryRestaurantlist: [],
       totalCartItems: 0,
       totalBillPrice: 0,
-      cartItemlist: [
-        // {
-        //   itemname: "Hakka Noodles",
-        //   itemid: 1,
-        //   price: 204.0,
-        //   itemtype: "VEG",
-        //   quantity: 1,
-        // },
-      ],
+      cartItemlist: [],
       messageBox: false,
       messageContent: "",
     };
+
     getRestaurantById(
       this.props.match.params.restaurantid,
       this.onRestaurantByIdRequestComplete
