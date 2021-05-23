@@ -207,7 +207,7 @@ class Details extends Component {
 
         {/**  Restaurant Information Part Start Here **/}
 
-        <Grid container spacing={2} className="rst-top-section">
+        <div className="rst-head-section">
           <Grid item xl={3} lg={2} className="rst-image">
             <img
               src={this.state.restaurantDetails.photo}
@@ -279,14 +279,18 @@ class Details extends Component {
               </div>
             </Grid>
           </Grid>
-        </Grid>
+        </div>
 
         {/**  Restaurant Information Part End Here **/}
 
-        <Grid container>
+        <div className="rst-body-section">
           {/**  Restaurant Menu-items Part Start Here **/}
 
-          <Grid item lg={6} xs={12} style={{ marginTop: "25px" }}>
+          <Grid
+            item
+            style={{ marginTop: "25px" }}
+            className="food-menu-container"
+          >
             {this.state.categoryRestaurantlist.map((category, catIndex) => (
               <div
                 key={"categoryitem-" + catIndex}
@@ -342,7 +346,7 @@ class Details extends Component {
 
           {/**  Restaurant Food-Cart Part Start Here **/}
 
-          <Grid item lg={6} xs={12} className="cart-container">
+          <Grid item className="cart-container">
             <Card className="food-card">
               <CardContent className="food-card-body">
                 <Typography
@@ -457,7 +461,7 @@ class Details extends Component {
             autoHideDuration={3000}
             message={this.state.messageContent}
           />
-        </Grid>
+        </div>
       </div>
     );
   }
