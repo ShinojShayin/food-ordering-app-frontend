@@ -8,15 +8,10 @@
  * @Param extra - Any extra data which require when callback method is invoked is passed through this variable
  *  */
 let fetchDataMethod = (reqObject, data, callback, extra) => {
-  console.log("fetchDataMethod called");
   let xhr = new XMLHttpRequest();
   xhr.addEventListener("readystatechange", function() {
-    console.log("this.readyState " + this.readyState);
-    console.log(" this.status " + this.status);
     if (this.readyState === 4) {
       let responseHeaders = xhr.getAllResponseHeaders();
-      console.log("Response Header: " + responseHeaders);
-      console.log("Response Text: " + this.responseText);
 
       let responseHeaderMap = {};
 
@@ -42,23 +37,16 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
       }
     }
   });
-  console.log("url: " + reqObject.url);
-  console.log("http method: " + reqObject.method);
-  console.log("data: " + JSON.stringify(data));
+
   xhr.open(reqObject.method, reqObject.url);
   xhr.setRequestHeader("Content-Type", "application/json");
   if (reqObject.headers) {
-    console.log("Req Header Found");
     Object.keys(reqObject.headers).forEach(function(key) {
-      console.log(key + " -- " + reqObject.headers[key]);
       xhr.setRequestHeader(key, reqObject.headers[key]);
     });
   }
-  try {
-    xhr.send(JSON.stringify(data));
-  } catch (e) {
-    console.log("sd" + e);
-  }
+
+  xhr.send(JSON.stringify(data));
 };
 
 /**

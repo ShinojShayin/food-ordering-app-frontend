@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Home.css";
+import "../../assets/font-awesome-4.7.0/css/font-awesome.min.css";
 import Header from "../../common/header/Header";
 import { getAllRestaurant } from "../../common/api/restaurant";
 import {
@@ -11,8 +12,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faRupeeSign } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
@@ -150,18 +149,18 @@ class Home extends Component {
 
                           <div className="card-bottom">
                             <span className="rating-tag">
-                              <FontAwesomeIcon
-                                className="starIcon"
-                                icon={faStar}
+                              <i
+                                aria-hidden="true"
+                                className="fa fa-star starIcon"
                               />
                               &nbsp; {restaurant.customer_rating} (
                               {restaurant.number_customers_rated})
                             </span>
 
                             <span className="price-tag">
-                              <FontAwesomeIcon
-                                className="starIcon"
-                                icon={faRupeeSign}
+                              <i
+                                aria-hidden="true"
+                                className="fa fa-inr starIcon"
                               />
                               {restaurant.average_price} for two
                             </span>

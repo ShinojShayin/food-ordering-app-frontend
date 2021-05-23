@@ -3,7 +3,7 @@ import {
   REGISTER_CUSTOMER_URL,
   LOGOUT_CUSTOMER_URL
 } from "../config/serverurl";
-import utility from "../utility";
+import utility from "./utility";
 
 /**
  * This function or method is used to signup user.
