@@ -26,9 +26,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { getAllSavedAddress } from "../../common/api/address";
-import { getAllStates } from "../../common/api/address";
-import { saveAddress } from "../../common/api/address";
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import { getAllAddresses } from "../../common/api/address";
+import { getAllStates, saveAddress, getPaymentMethods } from "../../common/api/address";
+
 
 
 const styles = (theme) => ({
@@ -53,7 +56,12 @@ const styles = (theme) => ({
     },
     title: {
         color: theme.palette.primary.light,
-    }
+    },
+    gridListAddressList: {
+        flexWrap: 'nowrap',
+        transform: 'translateZ(0)',
+        width: '100%'
+    },
 
 });
 function TabPanel(props) {
@@ -114,8 +122,15 @@ class Checkout extends Component {
                             }
                             {this.state.noDataNoteNumeric === 1 &&
                                 <TabPanel value={this.state.value} index={1}>
-                                    place a grid
-                        </TabPanel>
+                                    <GridList cols={3} className={this.classes.gridListAddressList} >
+                                        {this.addressList.map(address => (
+                                            <GridListTile key={address.id}>
+                                                <img src={address.poster_url} className="movie-poster" alt={address.title} />
+                                                <GridListTileBar title={address.title} />
+                                            </GridListTile>
+                                        ))}
+                                    </GridList>
+                                </TabPanel>
                             }
                         </TabPanel>
                         <TabPanel value={this.state.value} index={1}>
@@ -150,10 +165,10 @@ class Checkout extends Component {
                                     value={<Input id="age-native-required" />}
                                     value={this.state.state_name}
                                     onChange={this.inputstateChangeHandler}
-                                inputProps={{
-                                  id: 'age-native-required',
-                                  name:'state'
-                                }}
+                                    inputProps={{
+                                        id: 'age-native-required',
+                                        name: 'state'
+                                    }}
                                 >
                                     <option aria-label="None" />
                                     {this.state.stateList.map((name) =>
@@ -184,12 +199,11 @@ class Checkout extends Component {
             case 1:
                 return (
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={this.state.selectedRadioVal} onChange={this.radiohandleChange}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+                        <FormLabel component="legend">Select Mode Of Payment</FormLabel>
+                        <RadioGroup aria-label="payment" name="payment" defaultValue={this.state.selectedRadioVal} onChange={this.radiohandleChange}>
+                            {this.state.paymentList.map(payment => (
+                                <FormControlLabel key={payment.id} value={payment.payment_name} control={<Radio />} label={payment.payment_name} />
+                            ))}
                         </RadioGroup>
                     </FormControl>
                 );
@@ -202,25 +216,38 @@ class Checkout extends Component {
     tabhandleChange = (event, newValue) => {
         this.setState({ value: newValue });
     };
-    // onGetAllCustomerAddressComplete = (code, response) => {
-    //     if (code === 200) {
-    //         let addressList = response.addressList;
-    //         if (!addressList || addressList.length === 0)
-    //             this.setState({ noDataNote: "dispNone"});
-    //         this.setState({ addressList });
-    //         // console.log("response: 200 " + JSON.stringify(response));
-    //     } else {
-    //         //  console.log("code:" + code);
-    //         // console.log("response: else " + JSON.stringify(response));
-    //     }
-    // };
+    onGetAllCustomerAddressComplete = (code, response) => {
+        if (code === 200) {
+            let addressList = response.addressList;
+            if (!addressList || addressList.length === 0)
+                this.setState({ noDataNote: "dispNone" });
+            this.setState({ addressList });
+            //  console.log("response: 200 " + JSON.stringify(response));
+        } else {
+            //   console.log("code:" + code);
+            //   console.log("response: else " + JSON.stringify(response));
+        }
+    };
     onGetAllStatesComplete = (code, response) => {
         if (code === 200) {
             let stateList = response.states;
             if (!stateList || stateList.length === 0)
                 this.setState({ noDataNoteNumeric: 1 });
             this.setState({ stateList });
-            console.log(stateList);
+            //  console.log(stateList);
+        }
+
+    };
+    onGetAllPaymentMethodComplete = (code, response) => {
+        if (code === 200) {
+            let paymentList = response.paymentMethods;
+            if (paymentList.length !== 0) {
+                this.setState({ paymentList });
+                console.log(paymentList);
+
+            }
+        } else {
+            console.log("Payment    " + code);
         }
 
     };
@@ -236,7 +263,8 @@ class Checkout extends Component {
             noDataNote: "dispNone",
             steps: this.getSteps(),
             activeStep: 0,
-            selectedRadioVal: "female",
+            selectedRadioVal: "Cash on Delivery",
+            paymentList:[],
             addressList: {},
             stateList: [],
             noDataNoteNumeric: 0,
@@ -256,16 +284,21 @@ class Checkout extends Component {
             regexp: /^[0-9\b]+$/
         };
         getAllStates(this.onGetAllStatesComplete);
-        // getAllSavedAddress(this.onGetAllCustomerAddressComplete);
+        getAllAddresses(this.onGetAllCustomerAddressComplete);
+        getPaymentMethods(this.onGetAllPaymentMethodComplete)
+
     }
     handleNext = event => {
-        console.log(this.state.activeStep);
-        if (this.state.activeStep === 0) {
-            this.setState({ activeStep: 1 });
+        if (this.state.value == 0) {
+            console.log(this.state.activeStep);
+            if (this.state.activeStep === 0) {
+                this.setState({ activeStep: 1 });
+            }
+            else if (this.state.activeStep === 1) {
+                this.setState({ activeStep: 2 });
+            }
         }
-        else if (this.state.activeStep === 1) {
-            this.setState({ activeStep: 2 });
-        }
+
     };
     handleBack = event => {
         if (this.state.activeStep === 1) {
@@ -280,8 +313,11 @@ class Checkout extends Component {
     };
 
     radiohandleChange = (event) => {
+        console.log(" event.target.value " + event.target.value);
         this.setState({ selectedRadioVal: event.target.value });
     };
+
+
     saveAddressHandler = () => {
 
         this.state.flatno === "" ? this.setState({ flatnoRequired: "dispBlock" }) : this.setState({ flatnoRequired: "dispNone" });
@@ -302,8 +338,8 @@ class Checkout extends Component {
             this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
         }
-        console.log(this.state.city + " " +this.state.flatNo
-        + " " +this.state.locality + "  " + this.state.pincode+ " "+ this.state.statename);
+        console.log(this.state.city + " " + this.state.flatNo
+            + " " + this.state.locality + "  " + this.state.pincode + " " + this.state.statename);
         saveAddress(
             this.state.city,
             this.state.flatno,
@@ -325,10 +361,10 @@ class Checkout extends Component {
         this.setState({ city: e.target.value });
     }
     inputstateChangeHandler = (e) => {
-        console.log("statename log"+ this.state.statename);
+        console.log("statename log" + this.state.statename);
         this.setState({ statename: e.target.value });
 
-        console.log("statename log"+ this.state.statename);
+        console.log("statename log" + this.state.statename);
     }
     inputpincodeChangeHandler = (e) => {
         this.setState({ pincode: e.target.value });
@@ -336,6 +372,11 @@ class Checkout extends Component {
     }
     render() {
         const { classes } = this.props;
+        const {selectedRadioVal} = "Cash on Delivery";
+
+        // const handleChange = (event) => {
+        //     setValue(event.target.value);
+        // };
         return (
 
             <div >
