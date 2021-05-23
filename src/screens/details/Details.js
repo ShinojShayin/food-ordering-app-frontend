@@ -12,10 +12,12 @@ import {
   CardContent,
   Badge,
   Button,
+  Snackbar,
 } from "@material-ui/core";
 import { getRestaurantById } from "../../common/api/restaurant";
 import AddIcon from "@material-ui/icons/Add";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import { Link } from "react-router-dom";
 
 const styles = (theme) => ({});
 
@@ -49,19 +51,29 @@ class Details extends Component {
     }
   };
 
-  removeItemFromCart = (cartItemId, price) => {
+  removeItemFromCartHandler = (cartItemId, price) => {
     let cartlist = this.state.cartItemlist;
-    let quantity = 1;
+    let cartItem = null;
+    let itemIndex = null;
     for (let i = 0, size = cartlist.length; i <= size - 1; i++) {
       if (cartlist[i].itemid === cartItemId) {
-        quantity = cartlist[i].quantity;
-        cartlist.splice(i, 1);
+        cartItem = cartlist[i];
+        itemIndex = i;
         break;
       }
     }
 
-    let totalItems = this.state.totalCartItems - 1 * quantity;
-    let totalPrice = this.state.totalBillPrice - price * quantity;
+    cartItem.quantity -= 1;
+
+    if (cartItem.quantity === 0) {
+      cartlist.splice(itemIndex, 1);
+      this.showMessage("Item removed from cart!");
+    } else {
+      this.showMessage("Item quantity decreased by 1!");
+    }
+
+    let totalItems = this.state.totalCartItems - 1;
+    let totalPrice = this.state.totalBillPrice - price;
 
     this.setState({
       cartItemlist: cartlist,
@@ -70,7 +82,7 @@ class Details extends Component {
     });
   };
 
-  addItemToCart = (itemid, name, type, price) => {
+  addItemToCartHandler = (itemid, name, type, price, isCart) => {
     console.log("itemid : " + itemid);
     let cartlist = this.state.cartItemlist;
 
@@ -108,6 +120,54 @@ class Details extends Component {
       totalCartItems: totalItems,
       totalBillPrice: totalPrice,
     });
+
+    this.setState({
+      messageBox: false,
+    });
+
+    if (isCart) {
+      this.showMessage("Item quantity increased by 1!");
+    } else {
+      this.showMessage("Item added to cart!");
+    }
+  };
+
+  checkOutHandler = () => {
+    if (this.state.cartItemlist.length > 0) {
+      if (Boolean(this.props.userInfo)) {
+        this.props.history.push({
+          pathname: "/checkout",
+          state: { testvalue: "tesvalhai" },
+        });
+      } else {
+        this.showMessage("Please login first!");
+      }
+    } else {
+      this.showMessage("Please add an item to your cart!");
+    }
+  };
+
+  showMessage = (message) => {
+    if (this.state.messageBox) {
+      setTimeout(() => {
+        this.setState({
+          messageContent: message,
+          messageBox: true,
+        });
+      }, 300);
+    } else {
+      this.setState({
+        messageContent: message,
+        messageBox: true,
+      });
+    }
+  };
+
+  handleMessageBoxClose = () => {
+    this.setState({
+      messageContent: "",
+      messageBox: false,
+    });
   };
 
   constructor(props) {
@@ -126,6 +186,8 @@ class Details extends Component {
         //   quantity: 1,
         // },
       ],
+      messageBox: false,
+      messageContent: "",
     };
     getRestaurantById(
       this.props.match.params.restaurantid,
@@ -258,11 +320,12 @@ class Details extends Component {
                     <div className="food-item-action">
                       <IconButton
                         onClick={() =>
-                          this.addItemToCart(
+                          this.addItemToCartHandler(
                             item.id,
                             item.item_name,
                             item.item_type,
-                            item.price
+                            item.price,
+                            false
                           )
                         }
                       >
@@ -324,7 +387,7 @@ class Details extends Component {
                         <IconButton
                           className="item-ops"
                           onClick={() =>
-                            this.removeItemFromCart(
+                            this.removeItemFromCartHandler(
                               cartitem.itemid,
                               cartitem.price
                             )
@@ -336,11 +399,12 @@ class Details extends Component {
                         <IconButton
                           className="item-ops"
                           onClick={() =>
-                            this.addItemToCart(
+                            this.addItemToCartHandler(
                               cartitem.itemid,
                               cartitem.itemname,
                               cartitem.itemtype,
-                              cartitem.price
+                              cartitem.price,
+                              true
                             )
                           }
                         >
@@ -374,6 +438,7 @@ class Details extends Component {
                   variant="contained"
                   color="primary"
                   className="checkout-btn"
+                  onClick={() => this.checkOutHandler()}
                 >
                   CHECKOUT
                 </Button>
@@ -382,6 +447,16 @@ class Details extends Component {
           </Grid>
 
           {/**  Restaurant Food-Cart Part End Here **/}
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.messageBox}
+            onClose={this.handleMessageBoxClose}
+            autoHideDuration={3000}
+            message={this.state.messageContent}
+          />
         </Grid>
       </div>
     );
