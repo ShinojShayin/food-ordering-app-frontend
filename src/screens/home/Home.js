@@ -15,17 +15,10 @@ import { withStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 
 const styles = (theme) => ({
-  girdContainer: {
-    width: "85%",
-    margin: "auto",
-  },
   media: {
     height: 160,
   },
-  root: {
-    maxWidth: 345,
-    minHeight: 300,
-  },
+
   cardcontent: {
     paddingLeft: 30,
     paddingRight: 30,
@@ -109,20 +102,20 @@ class Home extends Component {
           screen="home"
         />
 
-        <Grid
-          alignContent="center"
-          container
-          spacing={5}
-          justify="flex-start"
-          direction="row"
-          className={classes.girdContainer}
-        >
+        <Grid container spacing={3} className="card-container">
           {this.state.restaurantList.map(
             (restaurant, index) =>
               restaurant.visible === true && (
-                <Grid item md={4} lg={3} sm={5} key={"grid_" + index}>
+                <Grid
+                  item
+                  md={4}
+                  lg={3}
+                  sm={5}
+                  key={"grid_" + index}
+                  className="card-grid-container"
+                >
                   <Link to={"/restaurant/" + restaurant.id}>
-                    <Card key={"card_" + index} className={classes.root}>
+                    <Card key={"card_" + index} className="main-card">
                       <CardActionArea>
                         <CardMedia
                           className={classes.media}
