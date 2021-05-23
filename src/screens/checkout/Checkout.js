@@ -121,7 +121,7 @@ class Checkout extends Component {
                         <TabPanel value={this.state.value} index={1}>
                             <FormControl >
                                 <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
-                                <Input id="username" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
+                                <Input id="flatno" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
                                 <FormHelperText className={this.state.flatnoRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -129,7 +129,7 @@ class Checkout extends Component {
                             <br /><br />
                             <FormControl >
                                 <InputLabel htmlFor="Locality">Locality</InputLabel>
-                                <Input id="username" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
+                                <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
                                 <FormHelperText className={this.state.localityRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -137,7 +137,7 @@ class Checkout extends Component {
                             <br /><br />
                             <FormControl >
                                 <InputLabel htmlFor="City">City</InputLabel>
-                                <Input id="username" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
+                                <Input id="city" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
                                 <FormHelperText className={this.state.cityRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -148,12 +148,12 @@ class Checkout extends Component {
                                 <Select
                                     native
                                     value={<Input id="age-native-required" />}
-
+                                    value={this.state.state_name}
                                     onChange={this.inputstateChangeHandler}
-                                // inputProps={{
-                                //   id: 'age-native-required',
-                                //   name:'state'
-                                // }}
+                                inputProps={{
+                                  id: 'age-native-required',
+                                  name:'state'
+                                }}
                                 >
                                     <option aria-label="None" />
                                     {this.state.stateList.map((name) =>
@@ -169,7 +169,7 @@ class Checkout extends Component {
 
                             <FormControl >
                                 <InputLabel htmlFor="pincode">pincode</InputLabel>
-                                <Input id="username" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
+                                <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
                                 <FormHelperText className={this.state.pincodeRequired}>
                                     <span className="red">{this.state.pincodeRequiredMessage}</span>
                                 </FormHelperText>
@@ -289,7 +289,7 @@ class Checkout extends Component {
         this.state.statename === "" ? this.setState({ stateRequired: "dispBlock" }) : this.setState({ stateRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
 
-        if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pinCode)))) {
+        if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pincode)))) {
             console.log("pin length" + this.state.pincode.length);
             this.setState({ pincodeRequiredMessage: "Pincode must contain only numbers and must be 6 digits long" });
             this.setState({ pincodeRequired: "dispBlock" });
@@ -302,10 +302,11 @@ class Checkout extends Component {
             this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
         }
-        //  saveAddress(this.onGetAllStatesComplete);
+        console.log(this.state.city + " " +this.state.flatNo
+        + " " +this.state.locality + "  " + this.state.pincode+ " "+ this.state.statename);
         saveAddress(
             this.state.city,
-            this.state.flatNo,
+            this.state.flatno,
             this.state.locality,
             this.state.pincode,
             this.state.statename,
@@ -324,7 +325,10 @@ class Checkout extends Component {
         this.setState({ city: e.target.value });
     }
     inputstateChangeHandler = (e) => {
+        console.log("statename log"+ this.state.statename);
         this.setState({ statename: e.target.value });
+
+        console.log("statename log"+ this.state.statename);
     }
     inputpincodeChangeHandler = (e) => {
         this.setState({ pincode: e.target.value });
