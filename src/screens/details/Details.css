@@ -151,6 +151,7 @@
 .cart-badge {
   top: -20px;
   right: 2px;
+  z-index: 0 !important;
 }
 
 .cart-icon-span {

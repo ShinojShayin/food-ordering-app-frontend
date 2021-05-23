@@ -130,12 +130,36 @@ class Details extends Component {
     }
   };
 
+  /**
+   * This method navigate to checkout page if eligible and also pass this object
+   * cartitems: {restaurantid: 1, bill:150, item_quantities:[{item_id, price, quantity, itemtype, itemname}]}
+   *
+   */
   checkOutHandler = () => {
     if (this.state.cartItemlist.length > 0) {
       if (Boolean(this.props.userInfo)) {
+        let itemList = [];
+        this.state.cartItemlist.forEach(function(object) {
+          var itemObj = {
+            item_id: object.itemid,
+            price: object.price,
+            quantity: object.quantity,
+            itemtype: object.itemtype,
+            itemname: object.itemname,
+          };
+
+          itemList.push(itemObj);
+        });
+
+        let cartObject = {
+          restaurantid: this.props.match.params.restaurantid,
+          bill: this.state.totalBillPrice,
+          item_quantities: itemList,
+        };
+
         this.props.history.push({
           pathname: "/checkout",
-          state: { testvalue: "tesvalhai" },
+          state: { cartitems: cartObject },
         });
       } else {
         this.showMessage("Please login first!");

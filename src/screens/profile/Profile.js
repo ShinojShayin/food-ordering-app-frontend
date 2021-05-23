@@ -4,6 +4,10 @@ import Header from "../../common/header/Header";
 import { Typography } from "@material-ui/core";
 
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+    if (!Boolean(this.props.userInfo)) this.props.history.push("/");
+  }
   render() {
     return (
       <div>

@@ -1,5 +1,6 @@
 /**
- * This is a utility method used for fetching url data and callback method is fired on successful request
+ * This is a utility method used for fetching url data and callback method is
+ * fired on successful request
  *
  * @Param reqObject - ex: {url:"http://google.com", method: "GET", "headers": {Content-Type: "Application/Json"}}
  * @Param data - This should contain request body
@@ -122,6 +123,7 @@ let setUserSessionMethod = (response, accessToken) => {
  */
 let logoutUserMethod = () => {
   localStorage.removeItem("user-info");
+  window.location.reload();
 };
 
 let utility = {
