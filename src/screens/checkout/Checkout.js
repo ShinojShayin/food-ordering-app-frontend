@@ -26,9 +26,12 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { getAllSavedAddress } from "../../common/api/address";
-import { getAllStates } from "../../common/api/address";
-import { saveAddress } from "../../common/api/address";
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import { getAllAddresses } from "../../common/api/address";
+import { getAllStates, saveAddress, getPaymentMethods } from "../../common/api/address";
+
 
 
 const styles = (theme) => ({
@@ -53,7 +56,12 @@ const styles = (theme) => ({
     },
     title: {
         color: theme.palette.primary.light,
-    }
+    },
+    gridListAddressList: {
+        flexWrap: 'nowrap',
+        transform: 'translateZ(0)',
+        width: '100%'
+    },
 
 });
 function TabPanel(props) {
@@ -114,14 +122,21 @@ class Checkout extends Component {
                             }
                             {this.state.noDataNoteNumeric === 1 &&
                                 <TabPanel value={this.state.value} index={1}>
-                                    place a grid
-                        </TabPanel>
+                                    <GridList cols={3} className={this.classes.gridListAddressList} >
+                                        {this.addressList.map(address => (
+                                            <GridListTile key={address.id}>
+                                                <img src={address.poster_url} className="movie-poster" alt={address.title} />
+                                                <GridListTileBar title={address.title} />
+                                            </GridListTile>
+                                        ))}
+                                    </GridList>
+                                </TabPanel>
                             }
                         </TabPanel>
                         <TabPanel value={this.state.value} index={1}>
                             <FormControl >
                                 <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
-                                <Input id="username" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
+                                <Input id="flatno" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
                                 <FormHelperText className={this.state.flatnoRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -129,7 +144,7 @@ class Checkout extends Component {
                             <br /><br />
                             <FormControl >
                                 <InputLabel htmlFor="Locality">Locality</InputLabel>
-                                <Input id="username" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
+                                <Input id="locality" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
                                 <FormHelperText className={this.state.localityRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -137,7 +152,7 @@ class Checkout extends Component {
                             <br /><br />
                             <FormControl >
                                 <InputLabel htmlFor="City">City</InputLabel>
-                                <Input id="username" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
+                                <Input id="city" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
                                 <FormHelperText className={this.state.cityRequired}>
                                     <span className="red">required</span>
                                 </FormHelperText>
@@ -148,12 +163,12 @@ class Checkout extends Component {
                                 <Select
                                     native
                                     value={<Input id="age-native-required" />}
-
+                                    value={this.state.state_name}
                                     onChange={this.inputstateChangeHandler}
-                                // inputProps={{
-                                //   id: 'age-native-required',
-                                //   name:'state'
-                                // }}
+                                    inputProps={{
+                                        id: 'age-native-required',
+                                        name: 'state'
+                                    }}
                                 >
                                     <option aria-label="None" />
                                     {this.state.stateList.map((name) =>
@@ -169,7 +184,7 @@ class Checkout extends Component {
 
                             <FormControl >
                                 <InputLabel htmlFor="pincode">pincode</InputLabel>
-                                <Input id="username" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
+                                <Input id="pincode" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
                                 <FormHelperText className={this.state.pincodeRequired}>
                                     <span className="red">{this.state.pincodeRequiredMessage}</span>
                                 </FormHelperText>
@@ -184,12 +199,11 @@ class Checkout extends Component {
             case 1:
                 return (
                     <FormControl component="fieldset">
-                        <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={this.state.selectedRadioVal} onChange={this.radiohandleChange}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+                        <FormLabel component="legend">Select Mode Of Payment</FormLabel>
+                        <RadioGroup aria-label="payment" name="payment" defaultValue={this.state.selectedRadioVal} onChange={this.radiohandleChange}>
+                            {this.state.paymentList.map(payment => (
+                                <FormControlLabel key={payment.id} value={payment.payment_name} control={<Radio />} label={payment.payment_name} />
+                            ))}
                         </RadioGroup>
                     </FormControl>
                 );
@@ -202,25 +216,38 @@ class Checkout extends Component {
     tabhandleChange = (event, newValue) => {
         this.setState({ value: newValue });
     };
-    // onGetAllCustomerAddressComplete = (code, response) => {
-    //     if (code === 200) {
-    //         let addressList = response.addressList;
-    //         if (!addressList || addressList.length === 0)
-    //             this.setState({ noDataNote: "dispNone"});
-    //         this.setState({ addressList });
-    //         // console.log("response: 200 " + JSON.stringify(response));
-    //     } else {
-    //         //  console.log("code:" + code);
-    //         // console.log("response: else " + JSON.stringify(response));
-    //     }
-    // };
+    onGetAllCustomerAddressComplete = (code, response) => {
+        if (code === 200) {
+            let addressList = response.addressList;
+            if (!addressList || addressList.length === 0)
+                this.setState({ noDataNote: "dispNone" });
+            this.setState({ addressList });
+            //  console.log("response: 200 " + JSON.stringify(response));
+        } else {
+            //   console.log("code:" + code);
+            //   console.log("response: else " + JSON.stringify(response));
+        }
+    };
     onGetAllStatesComplete = (code, response) => {
         if (code === 200) {
             let stateList = response.states;
             if (!stateList || stateList.length === 0)
                 this.setState({ noDataNoteNumeric: 1 });
             this.setState({ stateList });
-            console.log(stateList);
+            //  console.log(stateList);
+        }
+
+    };
+    onGetAllPaymentMethodComplete = (code, response) => {
+        if (code === 200) {
+            let paymentList = response.paymentMethods;
+            if (paymentList.length !== 0) {
+                this.setState({ paymentList });
+                console.log(paymentList);
+
+            }
+        } else {
+            console.log("Payment    " + code);
         }
 
     };
@@ -236,7 +263,8 @@ class Checkout extends Component {
             noDataNote: "dispNone",
             steps: this.getSteps(),
             activeStep: 0,
-            selectedRadioVal: "female",
+            selectedRadioVal: "Cash on Delivery",
+            paymentList:[],
             addressList: {},
             stateList: [],
             noDataNoteNumeric: 0,
@@ -256,16 +284,21 @@ class Checkout extends Component {
             regexp: /^[0-9\b]+$/
         };
         getAllStates(this.onGetAllStatesComplete);
-        // getAllSavedAddress(this.onGetAllCustomerAddressComplete);
+        getAllAddresses(this.onGetAllCustomerAddressComplete);
+        getPaymentMethods(this.onGetAllPaymentMethodComplete)
+
     }
     handleNext = event => {
-        console.log(this.state.activeStep);
-        if (this.state.activeStep === 0) {
-            this.setState({ activeStep: 1 });
+        if (this.state.value == 0) {
+            console.log(this.state.activeStep);
+            if (this.state.activeStep === 0) {
+                this.setState({ activeStep: 1 });
+            }
+            else if (this.state.activeStep === 1) {
+                this.setState({ activeStep: 2 });
+            }
         }
-        else if (this.state.activeStep === 1) {
-            this.setState({ activeStep: 2 });
-        }
+
     };
     handleBack = event => {
         if (this.state.activeStep === 1) {
@@ -280,8 +313,11 @@ class Checkout extends Component {
     };
 
     radiohandleChange = (event) => {
+        console.log(" event.target.value " + event.target.value);
         this.setState({ selectedRadioVal: event.target.value });
     };
+
+
     saveAddressHandler = () => {
 
         this.state.flatno === "" ? this.setState({ flatnoRequired: "dispBlock" }) : this.setState({ flatnoRequired: "dispNone" });
@@ -289,7 +325,7 @@ class Checkout extends Component {
         this.state.statename === "" ? this.setState({ stateRequired: "dispBlock" }) : this.setState({ stateRequired: "dispNone" });
         this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
 
-        if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pinCode)))) {
+        if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pincode)))) {
             console.log("pin length" + this.state.pincode.length);
             this.setState({ pincodeRequiredMessage: "Pincode must contain only numbers and must be 6 digits long" });
             this.setState({ pincodeRequired: "dispBlock" });
@@ -302,10 +338,11 @@ class Checkout extends Component {
             this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
 
         }
-        //  saveAddress(this.onGetAllStatesComplete);
+        console.log(this.state.city + " " + this.state.flatNo
+            + " " + this.state.locality + "  " + this.state.pincode + " " + this.state.statename);
         saveAddress(
             this.state.city,
-            this.state.flatNo,
+            this.state.flatno,
             this.state.locality,
             this.state.pincode,
             this.state.statename,
@@ -324,7 +361,10 @@ class Checkout extends Component {
         this.setState({ city: e.target.value });
     }
     inputstateChangeHandler = (e) => {
+        console.log("statename log" + this.state.statename);
         this.setState({ statename: e.target.value });
+
+        console.log("statename log" + this.state.statename);
     }
     inputpincodeChangeHandler = (e) => {
         this.setState({ pincode: e.target.value });
@@ -332,6 +372,11 @@ class Checkout extends Component {
     }
     render() {
         const { classes } = this.props;
+        const {selectedRadioVal} = "Cash on Delivery";
+
+        // const handleChange = (event) => {
+        //     setValue(event.target.value);
+        // };
         return (
 
             <div >

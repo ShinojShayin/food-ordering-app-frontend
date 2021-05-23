@@ -1,11 +1,12 @@
 import {
   CHECKOUT_CUSTOMER_ADDRESS_URL,
   CHECKOUT_ALL_STATES_URL,
-  CHECKOUT_ADD_ADDRESS_URL
+  CHECKOUT_ADD_ADDRESS_URL,
+  CHECKOUT_PAYMENT_URL
 } from "../config/serverurl";
 import utility from "./utility";
 
-export function getAllSavedAddress(onComplete) {
+export function getAllAddresses(onComplete) {
   let userInfo = utility.getLoggedinUser();
   let responseCallback = (code, response) => {
     onComplete(code, response);
@@ -21,7 +22,7 @@ export function getAllSavedAddress(onComplete) {
   );
 }
 export function getAllStates(onComplete) {
-  let userInfo = utility.getLoggedinUser();
+ // let userInfo = utility.getLoggedinUser();
   let responseCallback = (code, response) => {
     onComplete(code, response);
   };
@@ -61,6 +62,18 @@ export function saveAddress(
   utility.postData(
     { url: CHECKOUT_ADD_ADDRESS_URL, headers: header },
     requestData,
+    responseCallback,
+    null
+  );
+}
+export function getPaymentMethods(onComplete) {
+ 
+  let responseCallback = (code, response) => {
+    onComplete(code, response);
+  };
+  utility.getData(
+    { url: CHECKOUT_PAYMENT_URL },
+    null,
     responseCallback,
     null
   );
