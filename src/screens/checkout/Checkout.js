@@ -58,185 +58,185 @@ const styles = (theme) => ({
 });
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-  
+
     return (
-      <Typography  
-      component="div"  
-      role="tabpanel"  
-      hidden={value !== index}  
-      id={`simple-tabpanel-${index}`}  
-      aria-labelledby={`simple-tab-${index}`}  
-      {...other}  
-    >  
-      {value === index && <Box p={3}>{children}</Box>}  
-    </Typography> 
+        <Typography
+            component="div"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box p={2}>{children}</Box>}
+        </Typography>
     );
-  }
-  
-  TabPanel.propTypes = {  
-    children: PropTypes.node,  
-    index: PropTypes.any.isRequired,  
-    value: PropTypes.any.isRequired,  
-  };  
-  function testProps(index) {
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+function testProps(index) {
     return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
     };
-  }
+}
 class Checkout extends Component {
-  
+
     getSteps = () => {
         return ['Delivery', 'Payment'];
     }
     getStepContent = (step) => {
         switch (step) {
             case 0:
-               
-                    return (
-                        <div>
-                          <AppBar position="static">
-                            <Tabs value={this.state.value} onChange={this.handleChange}>
-                              <Tab label="Existing Address" {...testProps(0)} />
-                              <Tab label="New Address" {...testProps(1)} />
+
+                return (
+                    <div>
+                        <AppBar position="static">
+                            <Tabs value={this.state.value} onChange={this.tabhandleChange}>
+                                <Tab label="Existing Address" {...testProps(0)} />
+                                <Tab label="New Address" {...testProps(1)} />
                             </Tabs>
-                          </AppBar>
-                          <TabPanel value={this.state.value} index={0}>
+                        </AppBar>
+                        <TabPanel value={this.state.value} index={0}>
                             {this.state.noDataNoteNumeric === 0 &&
-                              <Typography
-                                gutterBottom
-                                variant="body1"
-                                //className={this.state.noDataNote}
-                                style={{ marginTop: 20 }}
-                                component={'span'} 
-                              >  There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.
+                                <Typography
+                                    gutterBottom
+                                    variant="body1"
+                                    //className={this.state.noDataNote}
+                                    style={{ marginTop: 20 }}
+                                    component={'span'}
+                                >  There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.
                             </Typography>
                             }
                             {this.state.noDataNoteNumeric === 1 &&
-                              <TabPanel value={this.state.value} index={1}>
-                                place a grid
+                                <TabPanel value={this.state.value} index={1}>
+                                    place a grid
                         </TabPanel>
                             }
-                          </TabPanel>
-                          <TabPanel value={this.state.value} index={1}>
-                          <FormControl >
-                              <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
-                              <Input id="username" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
-                              <FormHelperText className={this.state.flatnoRequired}>
-                                <span className="red">required</span>
-                              </FormHelperText>
+                        </TabPanel>
+                        <TabPanel value={this.state.value} index={1}>
+                            <FormControl >
+                                <InputLabel htmlFor="Flat / Building No.">Flat / Building No.</InputLabel>
+                                <Input id="username" type="text" flatno={this.state.flatno} onChange={this.inputflatnoChangeHandler} />
+                                <FormHelperText className={this.state.flatnoRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
                             </FormControl>
                             <br /><br />
                             <FormControl >
-                              <InputLabel htmlFor="Locality">Locality</InputLabel>
-                              <Input id="username" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
-                              <FormHelperText className={this.state.localityRequired}>
-                                <span className="red">required</span>
-                              </FormHelperText>
+                                <InputLabel htmlFor="Locality">Locality</InputLabel>
+                                <Input id="username" type="text" locality={this.state.locality} onChange={this.inputlocalityChangeHandler} />
+                                <FormHelperText className={this.state.localityRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
                             </FormControl>
                             <br /><br />
                             <FormControl >
-                              <InputLabel htmlFor="City">City</InputLabel>
-                              <Input id="username" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
-                              <FormHelperText className={this.state.cityRequired}>
-                                <span className="red">required</span>
-                              </FormHelperText>
+                                <InputLabel htmlFor="City">City</InputLabel>
+                                <Input id="username" type="text" city={this.state.city} onChange={this.inputcityChangeHandler} />
+                                <FormHelperText className={this.state.cityRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
                             </FormControl>
                             <br /><br />
                             <FormControl >
-                            <InputLabel htmlFor="age-native-required">State</InputLabel>
-                            <Select
-                            native
-                            value={<Input id="age-native-required" />}
-                           
-                            onChange={this.inputstateChangeHandler}
-                            // inputProps={{
-                            //   id: 'age-native-required',
-                            //   name:'state'
-                            // }}
-                          >
-                            <option aria-label="None"  />
-                            {this.state.stateList.map((name) =>
-                                    <option id={name.id} value={name.id}>
-                                    {name.state_name}
-                                  </option>)}
-                              </Select> 
-                               <FormHelperText className={this.state.stateRequired}>
-                                <span className="red">required</span>
-                              </FormHelperText>
+                                <InputLabel htmlFor="age-native-required">State</InputLabel>
+                                <Select
+                                    native
+                                    value={<Input id="age-native-required" />}
+
+                                    onChange={this.inputstateChangeHandler}
+                                // inputProps={{
+                                //   id: 'age-native-required',
+                                //   name:'state'
+                                // }}
+                                >
+                                    <option aria-label="None" />
+                                    {this.state.stateList.map((name) =>
+                                        <option id={name.id} value={name.id}>
+                                            {name.state_name}
+                                        </option>)}
+                                </Select>
+                                <FormHelperText className={this.state.stateRequired}>
+                                    <span className="red">required</span>
+                                </FormHelperText>
                             </FormControl>
                             <br /><br />
-                  
+
                             <FormControl >
-                              <InputLabel htmlFor="pincode">pincode</InputLabel>
-                              <Input id="username" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
-                              <FormHelperText className={this.state.pincodeRequired}>
-                                <span className="red">{this.state.pincodeRequiredMessage}</span>
-                              </FormHelperText>
+                                <InputLabel htmlFor="pincode">pincode</InputLabel>
+                                <Input id="username" type="text" pincode={this.state.pincode} onChange={this.inputpincodeChangeHandler} />
+                                <FormHelperText className={this.state.pincodeRequired}>
+                                    <span className="red">{this.state.pincodeRequiredMessage}</span>
+                                </FormHelperText>
                             </FormControl>
                             <br /><br />
                             <Button variant="contained" color="secondary" onClick={this.saveAddressHandler}>SAVE ADDRESS</Button>
-                  
-                          </TabPanel>
-                        </div>
-                      );  
-             
+
+                        </TabPanel>
+                    </div>
+                );
+
             case 1:
-                    return (
-                      <FormControl component="fieldset">
+                return (
+                    <FormControl component="fieldset">
                         <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={this.state.selectedRadioVal} onChange={this.handleChange}>
-                          <FormControlLabel value="female" control={<Radio />} label="Female" />
-                          <FormControlLabel value="male" control={<Radio />} label="Male" />
-                          <FormControlLabel value="other" control={<Radio />} label="Other" />
-                          <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
+                        <RadioGroup aria-label="gender" name="gender1" value={this.state.selectedRadioVal} onChange={this.radiohandleChange}>
+                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                            <FormControlLabel value="disabled" disabled control={<Radio />} label="(Disabled option)" />
                         </RadioGroup>
-                      </FormControl>
-                    );
-                
+                    </FormControl>
+                );
+
             default:
                 return 'Unknown step';
         }
-    
+
     }
-    handleChange = (event, newValue) => {
+    tabhandleChange = (event, newValue) => {
         this.setState({ value: newValue });
-      };
-      onGetAllCustomerAddressComplete = (code, response) => {
+    };
+    // onGetAllCustomerAddressComplete = (code, response) => {
+    //     if (code === 200) {
+    //         let addressList = response.addressList;
+    //         if (!addressList || addressList.length === 0)
+    //             this.setState({ noDataNote: "dispNone"});
+    //         this.setState({ addressList });
+    //         // console.log("response: 200 " + JSON.stringify(response));
+    //     } else {
+    //         //  console.log("code:" + code);
+    //         // console.log("response: else " + JSON.stringify(response));
+    //     }
+    // };
+    onGetAllStatesComplete = (code, response) => {
         if (code === 200) {
-          let addressList = response.addressList;
-          if (!addressList || addressList.length === 0)
-            this.setState({ noDataNoteNumeric: 1 });
-          this.setState({ addressList });
-         // console.log("response: 200 " + JSON.stringify(response));
-        } else {
-        //  console.log("code:" + code);
-         // console.log("response: else " + JSON.stringify(response));
+            let stateList = response.states;
+            if (!stateList || stateList.length === 0)
+                this.setState({ noDataNoteNumeric: 1 });
+            this.setState({ stateList });
+            console.log(stateList);
         }
-      };
-      onGetAllStatesComplete = (code, response) => {
-        if (code === 200) {
-          let stateList = response.states;
-          if (!stateList || stateList.length === 0)
-            this.setState({ noDataNoteNumeric: 1 });
-          this.setState({ stateList });
-          console.log(stateList);
-        } 
-      
-      };
-      onAddAddressRequestComplete = (code, response) => {
+
+    };
+    onAddAddressRequestComplete = (code, response) => {
         if (code === 201) {
-        console.log("Address Added Successfully");
+            console.log("Address Added Successfully");
         }
-        console.log("Address Update status code"+ code);
-      };
+        console.log("Address Update status code" + code);
+    };
     constructor(props) {
         super(props);
         this.state = {
             noDataNote: "dispNone",
             steps: this.getSteps(),
             activeStep: 0,
-            selectedRadioVal : "female",
+            selectedRadioVal: "female",
             addressList: {},
             stateList: [],
             noDataNoteNumeric: 0,
@@ -256,7 +256,7 @@ class Checkout extends Component {
             regexp: /^[0-9\b]+$/
         };
         getAllStates(this.onGetAllStatesComplete);
-    // getAllSavedAddress(this.onGetAllCustomerAddressComplete);
+        // getAllSavedAddress(this.onGetAllCustomerAddressComplete);
     }
     handleNext = event => {
         console.log(this.state.activeStep);
@@ -278,68 +278,68 @@ class Checkout extends Component {
     handleReset = event => {
         this.setState({ activeStep: 0 });
     };
-      
-    handleChange = (event) => {
-        this.setState({selectedRadioVal : event.target.value});
-           };
-           saveAddressHandler = () => {
 
-            this.state.flatno === "" ? this.setState({ flatnoRequired: "dispBlock" }) : this.setState({ flatnoRequired: "dispNone" });
-            this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
-            this.state.statename === "" ? this.setState({ stateRequired: "dispBlock" }) : this.setState({ stateRequired: "dispNone" });
-            this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
-            
-            if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pinCode)))) {
-              console.log("pin length" + this.state.pincode.length);
-              this.setState({ pincodeRequiredMessage: "Pincode must contain only numbers and must be 6 digits long" });
-              this.setState({ pincodeRequired: "dispBlock" });
-              } else if( this.state.pincode === "") {
-              console.log("pin " + this.state.pincode.length);
-              this.setState({ pincodeRequired: "dispBlock" });
-              this.setState({ pincodeRequiredMessage: "required" });
-           
-            }else{
-              this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
-         
-            }
-          //  saveAddress(this.onGetAllStatesComplete);
-            saveAddress(
-              this.state.city,
-              this.state.flatNo,
-              this.state.locality,
-              this.state.pincode,
-              this.state.statename,
-              this.onAddAddressRequestComplete
-            );
-           
-          }
-        
-          inputflatnoChangeHandler = (e) => {
-            this.setState({ flatno: e.target.value });
-          }
-          inputlocalityChangeHandler = (e) => {
-            this.setState({ locality: e.target.value });
-          }
-          inputcityChangeHandler = (e) => {
-            this.setState({ city: e.target.value });
-          }
-          inputstateChangeHandler = (e) => {
-            this.setState({ statename: e.target.value });
-          }
-          inputpincodeChangeHandler = (e) => {
-            this.setState({ pincode: e.target.value });
-           
-          }
+    radiohandleChange = (event) => {
+        this.setState({ selectedRadioVal: event.target.value });
+    };
+    saveAddressHandler = () => {
+
+        this.state.flatno === "" ? this.setState({ flatnoRequired: "dispBlock" }) : this.setState({ flatnoRequired: "dispNone" });
+        this.state.locality === "" ? this.setState({ localityRequired: "dispBlock" }) : this.setState({ localityRequired: "dispNone" });
+        this.state.statename === "" ? this.setState({ stateRequired: "dispBlock" }) : this.setState({ stateRequired: "dispNone" });
+        this.state.city === "" ? this.setState({ cityRequired: "dispBlock" }) : this.setState({ cityRequired: "dispNone" });
+
+        if (this.state.pincode !== "" && (this.state.pincode.length !== 6 || !(this.state.regexp.test(this.state.pinCode)))) {
+            console.log("pin length" + this.state.pincode.length);
+            this.setState({ pincodeRequiredMessage: "Pincode must contain only numbers and must be 6 digits long" });
+            this.setState({ pincodeRequired: "dispBlock" });
+        } else if (this.state.pincode === "") {
+            console.log("pin " + this.state.pincode.length);
+            this.setState({ pincodeRequired: "dispBlock" });
+            this.setState({ pincodeRequiredMessage: "required" });
+
+        } else {
+            this.state.pincode === "" ? this.setState({ pincodeRequired: "dispBlock" }) : this.setState({ pincodeRequired: "dispNone" });
+
+        }
+        //  saveAddress(this.onGetAllStatesComplete);
+        saveAddress(
+            this.state.city,
+            this.state.flatNo,
+            this.state.locality,
+            this.state.pincode,
+            this.state.statename,
+            this.onAddAddressRequestComplete
+        );
+
+    }
+
+    inputflatnoChangeHandler = (e) => {
+        this.setState({ flatno: e.target.value });
+    }
+    inputlocalityChangeHandler = (e) => {
+        this.setState({ locality: e.target.value });
+    }
+    inputcityChangeHandler = (e) => {
+        this.setState({ city: e.target.value });
+    }
+    inputstateChangeHandler = (e) => {
+        this.setState({ statename: e.target.value });
+    }
+    inputpincodeChangeHandler = (e) => {
+        this.setState({ pincode: e.target.value });
+
+    }
     render() {
         const { classes } = this.props;
         return (
 
             <div >
-                 <Header
-          userInfo={this.props.userInfo}
-          updateUserInfoState={this.props.updateUserInfoState}
-          screen="checkout"
-        />
+                <Header
+                    userInfo={this.props.userInfo}
+                    updateUserInfoState={this.props.updateUserInfoState}
+                    screen="checkout"
+                />
                 <div className="flex-container">
                     <div className="left">
                         <Stepper activeStep={this.state.activeStep} orientation="vertical">
@@ -384,12 +384,12 @@ class Checkout extends Component {
                         <Card>
                             <CardContent>
                                 <FormControl className={classes.formControl}>
-                                    <Typography component={'span'}  className={classes.title} color="textSecondary">
+                                    <Typography component={'span'} className={classes.title} color="textSecondary">
                                         Summary
                                         </Typography>
-                               
-                               
-                               
+
+
+
                                 </FormControl>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="movieName">Movie Name</InputLabel>
