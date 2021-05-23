@@ -82,7 +82,6 @@ class Details extends Component {
   };
 
   addItemToCartHandler = (itemid, name, type, price, isCart) => {
-    console.log("itemid : " + itemid);
     let cartlist = this.state.cartItemlist;
 
     let itemPresent = false;
