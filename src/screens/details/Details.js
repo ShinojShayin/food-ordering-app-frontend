@@ -132,7 +132,22 @@ class Details extends Component {
 
   /**
    * This method navigate to checkout page if eligible and also pass this object
-   * cartitems: {restaurantid: 1, bill:150, item_quantities:[{item_id, price, quantity, itemtype, itemname}]}
+   * cartitems: 
+   * {
+        restaurantid: 1,
+        restaurantname: "Loud Noise"
+        bill: 250,
+        item_quantities: [
+          {
+            item_id: 1,
+            price: 250,
+            quantity: 1,
+            itemtype: "VEG",
+            itemname: "Hakka Noodles"
+
+          }
+        ]
+      }
    *
    */
   checkOutHandler = () => {
