@@ -51,15 +51,17 @@ class Details extends Component {
 
   removeItemFromCart = (cartItemId, price) => {
     let cartlist = this.state.cartItemlist;
+    let quantity = 1;
     for (let i = 0, size = cartlist.length; i <= size - 1; i++) {
       if (cartlist[i].itemid === cartItemId) {
+        quantity = cartlist[i].quantity;
         cartlist.splice(i, 1);
         break;
       }
     }
 
-    let totalItems = this.state.totalCartItems - 1;
-    let totalPrice = this.state.totalBillPrice - price;
+    let totalItems = this.state.totalCartItems - 1 * quantity;
+    let totalPrice = this.state.totalBillPrice - price * quantity;
 
     this.setState({
       cartItemlist: cartlist,
@@ -69,12 +71,14 @@ class Details extends Component {
   };
 
   addItemToCart = (itemid, name, type, price) => {
+    console.log("itemid : " + itemid);
     let cartlist = this.state.cartItemlist;
 
     let itemPresent = false;
     let itemFound = null;
     if (cartlist.length > 0) {
       for (let i = 0, size = cartlist.length; i < size; i++) {
+        console.log(cartlist[i].itemid + " == " + itemid);
         if (cartlist[i].itemid === itemid) {
           itemFound = cartlist[i];
           itemPresent = true;
@@ -252,7 +256,16 @@ class Details extends Component {
                       {" " + item.price.toFixed(2)}
                     </div>
                     <div className="food-item-action">
-                      <IconButton>
+                      <IconButton
+                        onClick={() =>
+                          this.addItemToCart(
+                            item.id,
+                            item.item_name,
+                            item.item_type,
+                            item.price
+                          )
+                        }
+                      >
                         <AddIcon />
                       </IconButton>
                     </div>

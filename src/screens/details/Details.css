@@ -31,7 +31,7 @@
 
 .rst-location {
   letter-spacing: 1.4px !important;
-  font-size: 0.9em !important;
+  font-size: 1em !important;
   margin-top: 8px !important;
 }
 
@@ -41,7 +41,7 @@
 
 .rst-categories {
   margin-top: 0.9em !important;
-  font-size: 0.9em !important;
+  font-size: 0.85em !important;
   margin-bottom: 1em !important;
 }
 
@@ -166,6 +166,7 @@
 
 .cart-item-name {
   width: 50%;
+  text-transform: capitalize;
 }
 
 .cart-item-price {

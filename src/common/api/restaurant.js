@@ -2,7 +2,7 @@ import {
   GET_ALL_RESTAURANT_URL,
   RESTAURANT_BY_ID_URL,
 } from "../config/serverurl";
-import utility from "../utility";
+import utility from "./utility";
 
 export function getAllRestaurant(onComplete) {
   let responseCallback = (code, response) => {

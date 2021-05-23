@@ -23,7 +23,7 @@ import {
   loginCustomer,
   logoutCustomer,
 } from "../api/customer";
-import utility from "../utility";
+import utility from "../api/utility";
 import { Link } from "react-router-dom";
 
 const loginModalStyle = {
