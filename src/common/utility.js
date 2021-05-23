@@ -1,5 +1,6 @@
 /**
- * This is a utility method used for fetching url data and callback method is fired on successful request
+ * This is a utility method used for fetching url data and callback method is 
+ * fired on successful request
  *
  * @Param reqObject - ex: {url:"http://google.com", method: "GET", "headers": {Content-Type: "Application/Json"}}
  * @Param data - This should contain request body
@@ -20,6 +21,7 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
       let responseHeaderMap = {};
 
       if (this.status !== 0) {
+        console.log("in if");
         let arr = responseHeaders.trim().split(/[\r\n]+/);
         arr.forEach(function(line) {
           let parts = line.split(": ");
@@ -35,6 +37,7 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
           extra
         );
       } else {
+        console.log("in else");
         callback(this.status, null, responseHeaderMap, extra);
       }
     }

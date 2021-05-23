@@ -54,10 +54,11 @@ class Details extends Component {
       <div>
         <Header
           userInfo={this.props.userInfo}
+
           updateUserInfoState={this.props.updateUserInfoState}
-          screen="details"
         />
 
+          screen="details"
         <Grid container spacing={2} className="rst-top-section">
           <Grid item xs={3} class="rst-details-left">
             <img
