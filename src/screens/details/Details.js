@@ -88,7 +88,7 @@ class Details extends Component {
     let itemFound = null;
     if (cartlist.length > 0) {
       for (let i = 0, size = cartlist.length; i < size; i++) {
-        console.log(cartlist[i].itemid + " == " + itemid);
+       // console.log(cartlist[i].itemid + " == " + itemid);
         if (cartlist[i].itemid === itemid) {
           itemFound = cartlist[i];
           itemPresent = true;
@@ -172,11 +172,16 @@ class Details extends Component {
           bill: this.state.totalBillPrice,
           item_quantities: itemList,
         };
-
+        // console.log("cartObject"+cartObject.restaurantname);
+        // console.log("cartObject"+cartObject.restaurantid);
+        // console.log("cartObject"+cartObject.restaurantname);
+        // console.log("cartObject"+cartObject.bill);
+        // console.log("cartObject"+cartObject.item_quantities);
         this.props.history.push({
-          pathname: "/checkout",
+          pathname: '/checkout',
           state: { cartitems: cartObject },
         });
+      
       } else {
         this.showMessage("Please login first!");
       }
@@ -233,6 +238,7 @@ class Details extends Component {
       cartItemlist: [],
       messageBox: false,
       messageContent: "",
+      cartitems:"",
     };
 
     getRestaurantById(
@@ -411,7 +417,7 @@ class Details extends Component {
                     />
                   </span>
 
-                  <strong> My Cart</strong>
+                  <strong>Summary</strong>
                 </Typography>
                 <div className="cart-item-container">
                   {this.state.cartItemlist.map((cartitem, itemindex) => (
