@@ -177,14 +177,23 @@
 .cart-item-name {
   width: 50%;
   text-transform: capitalize;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
 }
 
 .cart-item-price {
   width: 15%;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
 }
 
 .cart-item-action {
   width: 35%;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
 }
 
 .item-icon {
@@ -267,11 +276,16 @@
   .cart-item-price {
     width: 16%;
   }
+
+  .item-icon {
+    margin-right: 5% !important;
+  }
 }
 
 @media (max-width: 600px) {
   #rst-photo {
-    width: 70% !important;
+    width: 23em !important;
+    height: 17em !important;
   }
 
   .rst-details-header {
@@ -292,5 +306,41 @@
 
   .cart-item-action {
     width: 30%;
+  }
+}
+
+@media (max-width: 420px) {
+  #rst-photo {
+    width: 18em !important;
+    height: 13em !important;
+  }
+
+  .food-item-container {
+    padding-left: 7%;
+    padding-top: 1%;
+    width: 85%;
+  }
+
+  .cart-container {
+    width: 100% !important;
+    padding-left: 24px !important;
+  }
+
+  .cart-item-name {
+    width: 63%;
+  }
+
+  .cart-item-action {
+    width: 25%;
+  }
+
+  .cart-item-price {
+    width: 22%;
+  }
+}
+
+@media (max-width: 375px) {
+  .cart-item-name {
+    width: 65%;
   }
 }
