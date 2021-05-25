@@ -60,7 +60,7 @@
 
 @media (max-width: 650px) {
   .main-card {
-    width: 100%;
+    width: 107%;
   }
 
   .card-container {
@@ -74,9 +74,9 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   .main-card {
-    width: 20em;
+    width: 18.5em;
   }
   .card-container {
     width: 100% !important;
