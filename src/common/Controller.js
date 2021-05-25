@@ -27,7 +27,7 @@ class Controller extends Component {
   render() {
     return (
       <Router>
-         {/* <Route
+         <Route
           exact
           path="/"
           render={(props) => (
@@ -59,7 +59,7 @@ class Controller extends Component {
               updateUserInfoState={this.updateUserInfoState}
             />
           )}
-        />  */}
+        /> 
         <Route
           exact
           path="/checkout"

@@ -38,7 +38,7 @@ export function getAllStates(onComplete) {
 }
 export function saveAddress(
   city,
-  flatNo,
+  flatno,
   locality,
   pincode,
   statename,
@@ -53,7 +53,7 @@ export function saveAddress(
   };
   let requestData = {
     city: city,
-    flat_building_name: flatNo,
+    flat_building_name: flatno,
     locality: locality,
     pincode: pincode,
     state_uuid: statename,

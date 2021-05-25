@@ -16,18 +16,19 @@
     height: 100%;
     width: auto;
 }
+
 @media (max-width: 992px) {
     .flex-container {
         flex-direction: column;
     }
-    .left {
+    /* .left {
         width: 100%;
     }
     .right {
-        width: 90%;
-    }
-    .released-movie-grid-item {
-        margin: 8px;
+        width: 90%; 
+    } */
+    .cart-grid-item {
+        padding-bottom: .1 px;
     }
 }
 .dispNone {
@@ -60,4 +61,7 @@
 
 .released-movie-grid-item {
     margin: 15px;
+}
+.align-right{
+    padding-left: 99%;
 }

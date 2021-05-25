@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { useEffect, Component } from "react";
 import "./Checkout.css";
+import moviesData from './movieData';
+import Details from "../details/Details";
+import "../details/Details.css";
 import PropTypes from 'prop-types';
 import Header from "../../common/header/Header";
 import AppBar from '@material-ui/core/AppBar';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
@@ -13,7 +14,6 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import CardActions from '@material-ui/core/CardActions';
 import Radio from '@material-ui/core/Radio';
@@ -24,20 +24,44 @@ import { withStyles } from "@material-ui/core/styles";
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import { getAllAddresses } from "../../common/api/address";
-import { getAllStates, saveAddress, getPaymentMethods } from "../../common/api/address";
-
+import { getAllAddresses, getAllStates, saveAddress, getPaymentMethods } from "../../common/api/address";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {
+    Divider,
+    Grid,
+    Typography,
+    IconButton,
+    Card,
+    CardContent,
+    Badge,
+    Button,
+    Snackbar,
+    CardActionArea
+} from "@material-ui/core";
 
 
 const styles = (theme) => ({
     root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
+    gridtitleBar: {
+        background:
+            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
     },
     button: {
         marginTop: theme.spacing(1),
@@ -57,11 +81,17 @@ const styles = (theme) => ({
     title: {
         color: theme.palette.primary.light,
     },
-    gridListAddressList: {
+    gridListMain: {
+        transform: 'translateZ(0)',
+        cursor: 'pointer'
+
+    },
+    gridListUpcomingMovies: {
         flexWrap: 'nowrap',
         transform: 'translateZ(0)',
         width: '100%'
     },
+
 
 });
 function TabPanel(props) {
@@ -98,9 +128,10 @@ class Checkout extends Component {
         return ['Delivery', 'Payment'];
     }
     getStepContent = (step) => {
+        const { classes } = this.props;
+
         switch (step) {
             case 0:
-
                 return (
                     <div>
                         <AppBar position="static">
@@ -110,7 +141,7 @@ class Checkout extends Component {
                             </Tabs>
                         </AppBar>
                         <TabPanel value={this.state.value} index={0}>
-                            {this.state.noDataNoteNumeric === 0 &&
+                            {this.state.noDataNoteNumeric === 1 &&
                                 <Typography
                                     gutterBottom
                                     variant="body1"
@@ -120,13 +151,25 @@ class Checkout extends Component {
                                 >  There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.
                             </Typography>
                             }
-                            {this.state.noDataNoteNumeric === 1 &&
-                                <TabPanel value={this.state.value} index={1}>
-                                    <GridList cols={3} className={this.classes.gridListAddressList} >
-                                        {this.addressList.map(address => (
+                            {this.state.noDataNoteNumeric === 0 &&
+                                <TabPanel value={this.state.value} index={0}>
+                                    <GridList cols={3} className={classes.gridListUpcomingMovies} >
+                                        {this.state.addressList.map(address => (
                                             <GridListTile key={address.id}>
-                                                <img src={address.poster_url} className="movie-poster" alt={address.title} />
-                                                <GridListTileBar title={address.title} />
+                                                <CardActionArea>
+                                                    <CardContent className={classes.cardcontent}>
+                                                        <Typography className={classes.title} color="textSecondary">
+                                                            {address.flat_building_name}<br />
+                                                            {address.locality}<br />
+                                                            {address.city}<br />
+                                                            {address.state.state_name}<br />
+                                                            {address.pincode}<br />
+                                                        </Typography>
+                                                    </CardContent>
+
+                                                    <CheckCircleIcon aria-label={`star`} onClick={this.addressSelectHandler}>
+                                                    </CheckCircleIcon>
+                                                </CardActionArea>
                                             </GridListTile>
                                         ))}
                                     </GridList>
@@ -218,22 +261,28 @@ class Checkout extends Component {
     };
     onGetAllCustomerAddressComplete = (code, response) => {
         if (code === 200) {
-            let addressList = response.addressList;
-            if (!addressList || addressList.length === 0)
-                this.setState({ noDataNote: "dispNone" });
+            let addressList = response.addresses;
+            if (!addressList || addressList.length === 0) {
+
+                this.setState({ noDataNoteNumeric: 1 });
+            }
             this.setState({ addressList });
             //  console.log("response: 200 " + JSON.stringify(response));
         } else {
-            //   console.log("code:" + code);
+            //    console.log("code:" + code);
             //   console.log("response: else " + JSON.stringify(response));
         }
     };
     onGetAllStatesComplete = (code, response) => {
         if (code === 200) {
             let stateList = response.states;
-            if (!stateList || stateList.length === 0)
-                this.setState({ noDataNoteNumeric: 1 });
-            this.setState({ stateList });
+            if (!stateList || stateList.length === 0) {
+
+            }
+            else {
+                this.setState({ stateList });
+            }
+
             //  console.log(stateList);
         }
 
@@ -243,7 +292,7 @@ class Checkout extends Component {
             let paymentList = response.paymentMethods;
             if (paymentList.length !== 0) {
                 this.setState({ paymentList });
-                console.log(paymentList);
+                // console.log(paymentList);
 
             }
         } else {
@@ -257,6 +306,40 @@ class Checkout extends Component {
         }
         console.log("Address Update status code" + code);
     };
+    placeOrderHandler = () => {
+        if (this.state.cartItemlist.length > 0) {
+            if (Boolean(this.props.userInfo)) {
+                let itemList = [];
+                this.state.cartItemlist.forEach(function (object) {
+                    var itemObj = {
+                        item_id: object.itemid,
+                        price: object.price,
+                        quantity: object.quantity,
+                        itemtype: object.itemtype,
+                        itemname: object.itemname,
+                    };
+
+                    itemList.push(itemObj);
+                });
+
+                let cartObject = {
+                    restaurantid: this.props.match.params.restaurantid,
+                    restaurantname: this.state.restaurantDetails.name,
+                    bill: this.state.totalBillPrice,
+                    item_quantities: itemList,
+                };
+                this.props.history.push({
+                    pathname: '/checkout',
+                    state: { cartitems: cartObject },
+                });
+
+            } else {
+                this.showMessage("Please login first!");
+            }
+        } else {
+            this.showMessage("Please add an item to your cart!");
+        }
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -264,8 +347,8 @@ class Checkout extends Component {
             steps: this.getSteps(),
             activeStep: 0,
             selectedRadioVal: "Cash on Delivery",
-            paymentList:[],
-            addressList: {},
+            paymentList: [],
+            addressList: [],
             stateList: [],
             noDataNoteNumeric: 0,
             value: 0,
@@ -281,11 +364,14 @@ class Checkout extends Component {
             pincode: "",
             pincodeRequired: "dispNone",
             pincodeRequiredMessage: "required",
-            regexp: /^[0-9\b]+$/
+            regexp: /^[0-9\b]+$/,
+            data: props.location.state
         };
+        console.log(this.state.data);
         getAllStates(this.onGetAllStatesComplete);
         getAllAddresses(this.onGetAllCustomerAddressComplete);
         getPaymentMethods(this.onGetAllPaymentMethodComplete)
+
 
     }
     handleNext = event => {
@@ -372,11 +458,7 @@ class Checkout extends Component {
     }
     render() {
         const { classes } = this.props;
-        const {selectedRadioVal} = "Cash on Delivery";
 
-        // const handleChange = (event) => {
-        //     setValue(event.target.value);
-        // };
         return (
 
             <div >
@@ -425,32 +507,103 @@ class Checkout extends Component {
                             </Paper>
                         )}</div>
                     <div className="right">
+                        <Grid item>
+                            <Card className="food-card">
+                                <CardContent className="food-card-body">
+                                    <FormControl className={classes.formControl}>
+                                        <Typography
+                                            gutterBottom
+                                            variant="h5"
+                                            component="h6"
+                                            className={classes.cardTitle}
+                                        >
+                                            <span className="cart-item-price grey">
+                                                <Badge
+                                                    badgeContent={this.state.totalCartItems}
+                                                    color="primary"
+                                                    className="cart-badge"
+                                                    showZero={true}
+                                                />
+                                            </span>
 
-                        <Card>
-                            <CardContent>
-                                <FormControl className={classes.formControl}>
-                                    <Typography component={'span'} className={classes.title} color="textSecondary">
-                                        Summary
+                                            <strong>Summary</strong>
                                         </Typography>
+                                    </FormControl>
+                                    <FormControl className={classes.formControl}>
+                                        <Typography
+                                            gutterBottom
+                                            variant="h6"
+                                            component="h6"
+                                            className={classes.cardTitle}
+                                        >
+
+                                            {this.state.data.cartitems.restaurantname}
+                                        </Typography>
+                                    </FormControl>
+                                    <FormControl className={classes.formControl}>
+                                        <div>
+                                            {this.state.data.cartitems.item_quantities.map(cartitem => (
+                                                <div
+                                                    key={"cartitem-" + cartitem.item_id}
+                                                    className="cart-item-list"
+                                                >
+                                                    <div className="cart-item-name grey">
+                                                        {cartitem.itemtype === "VEG" ? (
+                                                            <i
+                                                                className="fa fa-stop-circle-o item-icon veg"
+                                                                aria-hidden="true"
+                                                            />
+                                                        ) : (
+                                                            <i
+                                                                className="fa fa-stop-circle-o item-icon non-veg"
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                        {cartitem.itemname}
+                                                    </div>
+
+                                                    {cartitem.quantity}
+
+                                                    <div className="cart-item-price grey">
+                                                        <i
+                                                            aria-hidden="true"
+                                                            className="fa fa-inr rupee-icon"
+                                                        >{" " + cartitem.price}</i>
 
 
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
 
-                                </FormControl>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="movieName">Movie Name</InputLabel>
-                                    <Input id="movieName" />
-                                </FormControl>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="select-multiple-checkbox">Genres</InputLabel>
 
-                                </FormControl>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="select-multiple-checkbox">Artists</InputLabel>
+                                    </FormControl>
+                                    <Divider variant="middle" />
+                                    <FormControl className={classes.formControl}>
+                                        <div className="total-price-summary">
+                                            <div className="total-amount-txt">
+                                                <strong>Net Amount  </strong>
+                                            </div>
+                                            <div>
+                                                <i aria-hidden="true" className="fa fa-inr rupee-icon" />
+                                                <strong>
+                                                    {" " + this.state.data.cartitems.bill}
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </FormControl>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        className="checkout-btn"
+                                        onClick={() => this.placeOrderHandler()}
+                                    >
+                                        PLACE ORDER
+                </Button>
+                                </CardContent>
+                            </Card>
+                        </Grid>
 
-                                </FormControl>
-
-                            </CardContent>
-                        </Card>
                     </div>
                 </div>
             </div>
