@@ -23,7 +23,8 @@ import {
   loginCustomer,
   logoutCustomer,
 } from "../api/customer";
-import utility from "../utility";
+import utility from "../api/utility";
+import { Link } from "react-router-dom";
 
 const loginModalStyle = {
   content: {
@@ -430,7 +431,10 @@ class HeaderLoginComponent extends Component {
               }}
             >
               <Paper>
-                <MenuItem>My Profile</MenuItem>
+                <Link to="/profile">
+                  <MenuItem>My Profile</MenuItem>
+                </Link>
+
                 <MenuItem onClick={this.logoutUser}>Logout</MenuItem>
               </Paper>
             </Menu>

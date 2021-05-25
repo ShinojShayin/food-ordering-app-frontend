@@ -1,5 +1,6 @@
 /**
- * This is a utility method used for fetching url data and callback method is fired on successful request
+ * This is a utility method used for fetching url data and callback method is
+ * fired on successful request
  *
  * @Param reqObject - ex: {url:"http://google.com", method: "GET", "headers": {Content-Type: "Application/Json"}}
  * @Param data - This should contain request body
@@ -7,43 +8,42 @@
  * @Param extra - Any extra data which require when callback method is invoked is passed through this variable
  *  */
 let fetchDataMethod = (reqObject, data, callback, extra) => {
-  console.log("fetchDataMethod called");
   let xhr = new XMLHttpRequest();
   xhr.addEventListener("readystatechange", function() {
     if (this.readyState === 4) {
       let responseHeaders = xhr.getAllResponseHeaders();
-      console.log("Response Header: " + responseHeaders);
-      console.log("Response Text: " + this.responseText);
 
-      let arr = responseHeaders.trim().split(/[\r\n]+/);
       let responseHeaderMap = {};
-      arr.forEach(function(line) {
-        let parts = line.split(": ");
-        let header = parts.shift();
-        let value = parts.join(": ");
-        responseHeaderMap[header] = value;
-      });
 
-      callback(
-        this.status,
-        JSON.parse(this.responseText),
-        responseHeaderMap,
-        extra
-      );
+      if (this.status !== 0) {
+        let arr = responseHeaders.trim().split(/[\r\n]+/);
+        arr.forEach(function(line) {
+          let parts = line.split(": ");
+          let header = parts.shift();
+          let value = parts.join(": ");
+          responseHeaderMap[header] = value;
+        });
+
+        callback(
+          this.status,
+          JSON.parse(this.responseText),
+          responseHeaderMap,
+          extra
+        );
+      } else {
+        callback(this.status, null, responseHeaderMap, extra);
+      }
     }
   });
-  console.log("url: " + reqObject.url);
-  console.log("http method: " + reqObject.method);
-  console.log("data: " + JSON.stringify(data));
+
   xhr.open(reqObject.method, reqObject.url);
   xhr.setRequestHeader("Content-Type", "application/json");
   if (reqObject.headers) {
-    console.log("Req Header Found");
     Object.keys(reqObject.headers).forEach(function(key) {
-      console.log(key + " -- " + reqObject.headers[key]);
       xhr.setRequestHeader(key, reqObject.headers[key]);
     });
   }
+
   xhr.send(JSON.stringify(data));
 };
 
@@ -70,6 +70,19 @@ let getDataMethod = (reqObject, data, callback, extra) => {
  *  */
 let postDataMethod = (reqObject, data, callback, extra) => {
   reqObject.method = "POST";
+  fetchDataMethod(reqObject, data, callback, extra);
+};
+
+/**
+ * This method uses above mentioned fetchDataMethod to perform PUT Request
+ *
+ * @Param reqObject - ex: {url:"http://google.com", "headers": {Content-Type: "Application/Json"}}
+ * @Param data - This should contain request body
+ * @Param callback - On successfull request completion this callback method is called
+ * @Param extra - Any extra data which require when callback method is invoked is passed through this variable
+ *  */
+let putDataMethod = (reqObject, data, callback, extra) => {
+  reqObject.method = "PUT";
   fetchDataMethod(reqObject, data, callback, extra);
 };
 
@@ -110,11 +123,13 @@ let setUserSessionMethod = (response, accessToken) => {
  */
 let logoutUserMethod = () => {
   localStorage.removeItem("user-info");
+  window.location.reload();
 };
 
 let utility = {
   getData: getDataMethod,
   postData: postDataMethod,
+  putData: putDataMethod,
   getLoggedinUser: getLoggedinUserMethod,
   setUserSession: setUserSessionMethod,
   logoutUser: logoutUserMethod,
