@@ -23,7 +23,6 @@ import { withStyles } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Box from "@material-ui/core/Box";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
@@ -48,6 +47,13 @@ import {
   Snackbar,
   CardActionArea,
 } from "@material-ui/core";
+
+import {green,grey} from "@material-ui/core/colors";
+import shadows from "@material-ui/core/styles/shadows";
+import Box from '@material-ui/core/Box';
+import { theme } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/styles'; 
+import { createMuiTheme } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   root: {
@@ -92,8 +98,23 @@ const styles = (theme) => ({
     flexWrap: "nowrap",
     transform: "translateZ(0)",
     width: "100%",
+    shadowColor: '#ff0000',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
+        elevation: 1
+   
   },
+  selectedButton: {
+    color: theme.palette.success.main
+  },
+  defaultButton:{
+    color: theme.palette.primary
+
+  },
+
 });
+const greenTheme = createMuiTheme({ palette: { primary: green } })
+  const grayTheme = createMuiTheme({ palette: { primary: grey } })
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -122,6 +143,7 @@ function testProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 class Checkout extends Component {
   getSteps = () => {
     return ["Delivery", "Payment"];
@@ -156,7 +178,7 @@ class Checkout extends Component {
               {this.state.noDataNoteNumeric === 0 && (
                 <TabPanel value={this.state.value} index={0}>
                   <GridList cols={3} className={classes.gridListUpcomingMovies}>
-                    {this.state.addressList.map((address) => (
+                    {this.state.addressList.map((address,index) => (
                       <GridListTile key={address.id}>
                         <CardActionArea>
                           <CardContent className={classes.cardcontent}>
@@ -176,13 +198,15 @@ class Checkout extends Component {
                               <br />
                             </Typography>
                           </CardContent>
-
-                          <CheckCircleIcon
-                            aria-label={`star`}
-                            onClick={this.addressSelectHandler}
-                          />
+                          <IconButton 
+                           className={this.state.currentButton === index ? classes.selectedButton : classes.defaultButton }
+                          onClick={(e) =>this.onButtonClicked(index, e)}>
+                          <CheckCircleIcon aria-label={`star`} />
+                          </IconButton>
+                      
                         </CardActionArea>
                       </GridListTile>
+                   
                     ))}
                   </GridList>
                 </TabPanel>
@@ -233,19 +257,18 @@ class Checkout extends Component {
               </FormControl>
               <br />
               <br />
-              <FormControl>
-                <InputLabel htmlFor="age-native-required">State</InputLabel>
+              <FormControl required className={classes.formControl}>
+        <InputLabel htmlFor="age-native-required">State</InputLabel>
                 <Select
                   native
-                  value={<Input id="age-native-required" />}
+                  value={<Input />}
                   value={this.state.state_name}
                   onChange={this.inputstateChangeHandler}
                   inputProps={{
-                    id: "age-native-required",
-                    name: "state",
+                    id: 'age-native-required',
                   }}
                 >
-                  <option aria-label="None" />
+                  <option  />
                   {this.state.stateList.map((name) => (
                     <option id={name.id} value={name.id}>
                       {name.state_name}
@@ -389,6 +412,7 @@ class Checkout extends Component {
       this.showMessage("Please add an item to your cart!");
     }
   };
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -415,11 +439,23 @@ class Checkout extends Component {
       pincodeRequiredMessage: "required",
       regexp: /^[0-9\b]+$/,
       data: props.location.state,
+      currentButton: null,
+      tileshadow:"60 px -16px green"
+
     };
     console.log(this.state.data);
     getAllStates(this.onGetAllStatesComplete);
     getAllAddresses(this.onGetAllCustomerAddressComplete);
     getPaymentMethods(this.onGetAllPaymentMethodComplete);
+  }
+
+  onButtonClicked =(id, event)=> {
+   
+    // var clicked = event.target;
+    // clicked.style.color = 'green';
+    this.setState({ currentButton: this.state.currentButton === id ? null : id })
+    console.log(id);
+
   }
   handleNext = (event) => {
     if (this.state.value == 0) {
@@ -520,9 +556,13 @@ class Checkout extends Component {
   inputpincodeChangeHandler = (e) => {
     this.setState({ pincode: e.target.value });
   };
+  addressSelectHandler = (e) =>{
+    e.style.color="green";
+
+  }
   render() {
     const { classes } = this.props;
-
+    
     return (
       <div>
         <Header

@@ -62,6 +62,11 @@
 .released-movie-grid-item {
     margin: 15px;
 }
-.align-right{
-    padding-left: 99%;
+.add-shadow{
+box-shadow: red;
+min-height: inherit;
+max-height: "18px";
 }
+/* .align-right{
+    padding-left: 80%;
+} */
