@@ -113,8 +113,6 @@ const styles = (theme) => ({
   },
 
 });
-const greenTheme = createMuiTheme({ palette: { primary: green } })
-  const grayTheme = createMuiTheme({ palette: { primary: grey } })
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -161,14 +159,15 @@ class Checkout extends Component {
                 <Tab label="New Address" {...testProps(1)} />
               </Tabs>
             </AppBar>
-            <TabPanel value={this.state.value} index={0}>
+            <TabPanel component="div" value={this.state.value} index={0}>
               {this.state.noDataNoteNumeric === 1 && (
                 <Typography
+                component="div"
                   gutterBottom
                   variant="body1"
                   //className={this.state.noDataNote}
                   style={{ marginTop: 20 }}
-                  component={"span"}
+              
                 >
                   {" "}
                   There are no saved addresses! You can save an address using
@@ -177,14 +176,15 @@ class Checkout extends Component {
               )}
               {this.state.noDataNoteNumeric === 0 && (
                 <TabPanel value={this.state.value} index={0}>
-                  <GridList cols={3} className={classes.gridListUpcomingMovies}>
+                <GridList cols={3} className={classes.gridListUpcomingMovies}>
                     {this.state.addressList.map((address,index) => (
-                      <GridListTile key={address.id}>
-                        <CardActionArea>
-                          <CardContent className={classes.cardcontent}>
+                    
+                      <GridListTile key={address.id}
+                         className={this.state.currentButton === index ? "box two" : "box" }>
+                        
                             <Typography
-                              className={classes.title}
-                              color="textSecondary"
+                              className={classes.gridtilecontent }
+                              color="textSecondary" 
                             >
                               {address.flat_building_name}
                               <br />
@@ -197,18 +197,18 @@ class Checkout extends Component {
                               {address.pincode}
                               <br />
                             </Typography>
-                          </CardContent>
+                       
                           <IconButton 
                            className={this.state.currentButton === index ? classes.selectedButton : classes.defaultButton }
                           onClick={(e) =>this.onButtonClicked(index, e)}>
                           <CheckCircleIcon aria-label={`star`} />
                           </IconButton>
                       
-                        </CardActionArea>
                       </GridListTile>
-                   
+                      
                     ))}
-                  </GridList>
+                  </GridList> 
+                
                 </TabPanel>
               )}
             </TabPanel>
@@ -260,17 +260,16 @@ class Checkout extends Component {
               <FormControl required className={classes.formControl}>
         <InputLabel htmlFor="age-native-required">State</InputLabel>
                 <Select
-                  native
-                  value={<Input />}
-                  value={this.state.state_name}
+                  native value={<Input />}
+                  value={this.state.state_name} 
                   onChange={this.inputstateChangeHandler}
                   inputProps={{
                     id: 'age-native-required',
                   }}
                 >
                   <option  />
-                  {this.state.stateList.map((name) => (
-                    <option id={name.id} value={name.id}>
+                  {this.state.stateList.map((name,index) => (
+                    <option id={name.id} value={name.id} key={index}>
                       {name.state_name}
                     </option>
                   ))}
@@ -451,10 +450,8 @@ class Checkout extends Component {
 
   onButtonClicked =(id, event)=> {
    
-    // var clicked = event.target;
-    // clicked.style.color = 'green';
     this.setState({ currentButton: this.state.currentButton === id ? null : id })
-    console.log(id);
+    // console.log(id);
 
   }
   handleNext = (event) => {
@@ -577,7 +574,7 @@ class Checkout extends Component {
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <Typography>{this.getStepContent(index)}</Typography>
+                    <Typography component="div">{this.getStepContent(index)}</Typography>
                     <div className={classes.actionsContainer}>
                       <div>
                         <Button
@@ -605,7 +602,7 @@ class Checkout extends Component {
             </Stepper>
             {this.state.activeStep === this.state.steps.length && (
               <Paper square elevation={0} className={classes.resetContainer}>
-                <Typography component={"span"}>
+                <Typography component={"div"}>
                   View the summary & place your order now!
                 </Typography>
                 <Button onClick={this.handleReset} className={classes.button}>
