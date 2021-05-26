@@ -54,6 +54,7 @@ import Box from '@material-ui/core/Box';
 import { theme } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles'; 
 import { createMuiTheme } from "@material-ui/core/styles";
+import { Autorenew, FormatAlignRightOutlined } from "@material-ui/icons";
 
 const styles = (theme) => ({
   root: {
@@ -68,17 +69,18 @@ const styles = (theme) => ({
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: "translateZ(0)",
   },
-  gridtitleBar: {
-    background:
-      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
-  },
-  button: {
-    marginTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
+  // gridtitleBar: {
+  //   background:
+  //     "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+  // },
+  // button: {
+  //   marginTop: theme.spacing(1),
+  //   marginRight: theme.spacing(1),
+  // },
   actionsContainer: {
     marginBottom: theme.spacing(2),
   },
+
   resetContainer: {
     padding: theme.spacing(3),
   },
@@ -97,7 +99,10 @@ const styles = (theme) => ({
   gridListUpcomingMovies: {
     flexWrap: "nowrap",
     transform: "translateZ(0)",
+    overflow: "Auto",
     width: "100%",
+    padding:0,
+    margin:0,
     shadowColor: '#ff0000',
         shadowOffset: {width: 0, height: 1},
         shadowOpacity: 0.2,
@@ -105,13 +110,15 @@ const styles = (theme) => ({
    
   },
   selectedButton: {
-    color: theme.palette.success.main
+    // color: theme.palette.success.main
+    color: theme.palette.success.dark,
+   
   },
+ 
   defaultButton:{
-    color: theme.palette.primary
-
-  },
-
+    color: theme.palette.primary,
+  
+  }
 });
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -145,7 +152,7 @@ function testProps(index) {
 class Checkout extends Component {
   getSteps = () => {
     return ["Delivery", "Payment"];
-  };
+  }; 
   getStepContent = (step) => {
     const { classes } = this.props;
 
@@ -155,11 +162,12 @@ class Checkout extends Component {
           <div>
             <AppBar position="static">
               <Tabs value={this.state.value} onChange={this.tabhandleChange}>
-                <Tab label="Existing Address" {...testProps(0)} />
+                <Tab label="Existing Address" {...testProps(0)} onClick={this.tabClickHandler}/>
                 <Tab label="New Address" {...testProps(1)} />
               </Tabs>
             </AppBar>
-            <TabPanel component="div" value={this.state.value} index={0}>
+            <TabPanel component="div" value={this.state.value} index={0}
+            >
               {this.state.noDataNoteNumeric === 1 && (
                 <Typography
                 component="div"
@@ -173,7 +181,7 @@ class Checkout extends Component {
                   There are no saved addresses! You can save an address using
                   the 'New Address' tab or using your ‘Profile’ menu option.
                 </Typography>
-              )}
+              )} 
               {this.state.noDataNoteNumeric === 0 && (
                 <TabPanel value={this.state.value} index={0}>
                 <GridList cols={3} className={classes.gridListUpcomingMovies}>
@@ -182,9 +190,8 @@ class Checkout extends Component {
                       <GridListTile key={address.id}
                          className={this.state.currentButton === index ? "box two" : "box" }>
                         
-                            <Typography
-                              className={classes.gridtilecontent }
-                              color="textSecondary" 
+                            <Typography 
+                              color="textSecondary"
                             >
                               {address.flat_building_name}
                               <br />
@@ -197,13 +204,14 @@ class Checkout extends Component {
                               {address.pincode}
                               <br />
                             </Typography>
-                       
-                          <IconButton 
+                       <br/>
+                     
+                          <IconButton style={{padding:0, float: 'right'}}
                            className={this.state.currentButton === index ? classes.selectedButton : classes.defaultButton }
                           onClick={(e) =>this.onButtonClicked(index, e)}>
                           <CheckCircleIcon aria-label={`star`} />
                           </IconButton>
-                      
+                        
                       </GridListTile>
                       
                     ))}
@@ -448,6 +456,9 @@ class Checkout extends Component {
     getPaymentMethods(this.onGetAllPaymentMethodComplete);
   }
 
+  tabClickHandler=(e)=>{
+    getAllAddresses(this.onGetAllCustomerAddressComplete);
+  }
   onButtonClicked =(id, event)=> {
    
     this.setState({ currentButton: this.state.currentButton === id ? null : id })
