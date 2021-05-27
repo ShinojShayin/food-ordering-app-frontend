@@ -15,6 +15,13 @@
 } 
 
 
+@media (max-width: 1280px) {
+    .food-card {
+      max-width: 93%;
+      margin-bottom: 4%;
+    }
+  }
+
 @media (max-width: 992px) {
     .flex-container {
         flex-direction: column;
@@ -23,12 +30,15 @@
         width: 100%;
     }
     .right {
-        width: 90%; 
+        width: 100%; 
     } */
      .cart-grid-item {
         padding-bottom: .1 px;
     }
 }
+
+
+
 .dispNone {
     display: none;
 }
@@ -54,7 +64,8 @@
 
 .right {
     padding-top: 20px;
-    width: 24%;
+    /* width: 24%; */
+    min-height: 300px;
 }
 
 /* .released-movie-grid-item {
@@ -91,8 +102,13 @@ box-shadow: red;
 .mySelect__value-container{
     height: 35px;
    }
-   /* .MuiMenu-paper{
-    max-height:calc(100% - 360px);
-    max-width:calc(100%) ;
-    transform: translateY(48px);
-   } */
+   .food-card {
+    min-height: 100px;
+    max-width: 600px;
+    width: 95% !important;
+  }
+  
+  .food-card-body {
+    padding-top: 25px !important;
+  }
+  

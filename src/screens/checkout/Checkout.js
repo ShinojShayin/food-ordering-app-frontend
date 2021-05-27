@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Checkout.css";
 // import Details from "../details/Details";
-import "../details/Details.css";
+// import "../details/Details.css";
 import PropTypes from "prop-types";
 import Header from "../../common/header/Header";
 import AppBar from "@material-ui/core/AppBar";
@@ -19,7 +19,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
-import { withStyles,ThemeProvider } from "@material-ui/core/styles";
+import { withStyles, ThemeProvider } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -50,10 +50,10 @@ import {
 
 // import {green,grey} from "@material-ui/core/colors";
 // import shadows from "@material-ui/core/styles/shadows";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 // import { Autorenew, FormatAlignRightOutlined, ImportantDevices, Translate } from "@material-ui/icons";
-import MenuItem from '@material-ui/core/MenuItem';
-import { createMuiTheme } from '@material-ui/core/styles';
+import MenuItem from "@material-ui/core/MenuItem";
+import { createMuiTheme } from "@material-ui/core/styles";
 const styles = (theme) => ({
   root: {
     display: "flex",
@@ -61,27 +61,25 @@ const styles = (theme) => ({
     justifyContent: "space-around",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
-  
   },
- 
+
   // MuiPaper: {
   //   root: {
   //     padding: '10px',
   //     marginBottom: '10px',
   //     maxHeight:'calc(100% - 360px)',
   //   },
-    
+
   // },
   // MuiMenu: {
   //   root: {
   //     maxHeight:'calc(100% - 360px)',
   //     // transform:Trans(0,48),
   //   },
-    
- // },
+
+  // },
   selectEmpty: {
     marginTop: theme.spacing(2),
-
   },
   gridList: {
     flexWrap: "nowrap",
@@ -107,9 +105,8 @@ const styles = (theme) => ({
     margin: theme.spacing.index,
     minWidth: 240,
     maxWidth: 240,
-   
   },
- 
+
   title: {
     color: theme.palette.primary.light,
   },
@@ -122,51 +119,44 @@ const styles = (theme) => ({
     transform: "translateZ(0)",
     overflow: "Auto",
     width: "100%",
-    padding:0,
-    margin:0,
-    shadowColor: '#ff0000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.2,
-        elevation: 1
-   
+    padding: 0,
+    margin: 0,
+    shadowColor: "#ff0000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    elevation: 1,
   },
   selectedButton: {
     // color: theme.palette.success.main
     color: theme.palette.success.dark,
-   
   },
- 
-  defaultButton:{
+
+  defaultButton: {
     color: theme.palette.primary,
-  
   },
 });
 
 const theme = createMuiTheme({
   overrides: {
-      MuiPaper: {
+    MuiPaper: {
       root: {
-       // transform:'TranslateY(48) important',
-       // minWidth:'200px important'
-      
+        // transform:'TranslateY(48) important',
+        // minWidth:'200px important'
       },
-      
     },
     MuiMenu: {
       paper: {
-        maxHeight:'calc(100% - 450px)',
-         transform:'TranslateY(48px) !important',
-         minWidth:'200px !important'
+        maxHeight: "calc(100% - 450px)",
+        transform: "TranslateY(48px) !important",
+        minWidth: "200px !important",
       },
-      
     },
     MuiListItem: {
       gutters: {
-      paddingRight:'0px',
+        paddingRight: "0px",
       },
-      
     },
-  }
+  },
 });
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -200,7 +190,7 @@ function testProps(index) {
 class Checkout extends Component {
   getSteps = () => {
     return ["Delivery", "Payment"];
-  }; 
+  };
   getStepContent = (step) => {
     const { classes } = this.props;
 
@@ -210,61 +200,66 @@ class Checkout extends Component {
           <div>
             <AppBar position="static">
               <Tabs value={this.state.value} onChange={this.tabhandleChange}>
-                <Tab label="Existing Address" {...testProps(0)} onClick={this.tabClickHandler}/>
+                <Tab
+                  label="Existing Address"
+                  {...testProps(0)}
+                  onClick={this.tabClickHandler}
+                />
                 <Tab label="New Address" {...testProps(1)} />
               </Tabs>
             </AppBar>
-            <TabPanel component="div" value={this.state.value} index={0}
-            >
+            <TabPanel component="div" value={this.state.value} index={0}>
               {this.state.noDataNoteNumeric === 1 && (
                 <Typography
-                component="div"
+                  component="div"
                   gutterBottom
                   variant="body1"
                   //className={this.state.noDataNote}
                   style={{ marginTop: 20 }}
-              
                 >
                   {" "}
                   There are no saved addresses! You can save an address using
                   the 'New Address' tab or using your ‘Profile’ menu option.
                 </Typography>
-              )} 
+              )}
               {this.state.noDataNoteNumeric === 0 && (
                 <TabPanel value={this.state.value} index={0}>
-                <GridList cols={3} className={classes.gridListUpcomingMovies}>
-                    {this.state.addressList.map((address,index) => (
-                    
-                      <GridListTile key={address.id}
-                         className={this.state.currentButton === index ? "box two" : "box" }>
-                        
-                            <Typography 
-                              color="textSecondary"
-                            >
-                              {address.flat_building_name}
-                              <br />
-                              {address.locality}
-                              <br />
-                              {address.city}
-                              <br />
-                              {address.state.state_name}
-                              <br />
-                              {address.pincode}
-                              <br />
-                            </Typography>
-                       <br/>
-                     
-                          <IconButton style={{padding:0, float: 'right'}}
-                           className={this.state.currentButton === index ? classes.selectedButton : classes.defaultButton }
-                          onClick={(e) =>this.onButtonClicked(index, e)}>
+                  <GridList cols={3} className={classes.gridListUpcomingMovies}>
+                    {this.state.addressList.map((address, index) => (
+                      <GridListTile
+                        key={address.id}
+                        className={
+                          this.state.currentButton === index ? "box two" : "box"
+                        }
+                      >
+                        <Typography color="textSecondary">
+                          {address.flat_building_name}
+                          <br />
+                          {address.locality}
+                          <br />
+                          {address.city}
+                          <br />
+                          {address.state.state_name}
+                          <br />
+                          {address.pincode}
+                          <br />
+                        </Typography>
+                        <br />
+
+                        <IconButton
+                          style={{ padding: 0, float: "right" }}
+                          className={
+                            this.state.currentButton === index
+                              ? classes.selectedButton
+                              : classes.defaultButton
+                          }
+                          onClick={(e) => this.onButtonClicked(index, e)}
+                        >
                           <CheckCircleIcon aria-label={`star`} />
-                          </IconButton>
-                        
+                        </IconButton>
                       </GridListTile>
-                      
                     ))}
-                  </GridList> 
-                
+                  </GridList>
                 </TabPanel>
               )}
             </TabPanel>
@@ -337,30 +332,32 @@ class Checkout extends Component {
                   <span className="red">required</span>
                 </FormHelperText>
               </FormControl> */}
-            <ThemeProvider theme={theme}>
-          <FormControl id="form-control-select" required 
-          className={classes.formControl} >
-        <InputLabel id="demo-simple-select-required-label" 
-        >State</InputLabel>
-        <Select 
-
-          labelId="demo-simple-select-required-label"
-          id="demo-simple-select-required"
-          value={this.state.statename} 
-          onChange={this.inputstateChangeHandler}
-          className= {classes.selectEmpty}
-        >
-         
-          {this.state.stateList.map((name,index) => (
-                    <MenuItem id={name.id} value={name.id} key={index} >
-                      {name.state_name}
-                    </MenuItem>
-                  ))}
-        </Select>
-        <FormHelperText>Required</FormHelperText>
-      </FormControl>
-      </ThemeProvider>
-           <br />
+              <ThemeProvider theme={theme}>
+                <FormControl
+                  id="form-control-select"
+                  required
+                  className={classes.formControl}
+                >
+                  <InputLabel id="demo-simple-select-required-label">
+                    State
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-required-label"
+                    id="demo-simple-select-required"
+                    value={this.state.statename}
+                    onChange={this.inputstateChangeHandler}
+                    className={classes.selectEmpty}
+                  >
+                    {this.state.stateList.map((name, index) => (
+                      <MenuItem id={name.id} value={name.id} key={index}>
+                        {name.state_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>Required</FormHelperText>
+                </FormControl>
+              </ThemeProvider>
+              <br />
               <br />
 
               <FormControl>
@@ -493,7 +490,7 @@ class Checkout extends Component {
       this.showMessage("Please add an item to your cart!");
     }
   };
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -521,8 +518,7 @@ class Checkout extends Component {
       regexp: /^[0-9\b]+$/,
       data: props.location.state,
       currentButton: null,
-      tileshadow:"60 px -16px green"
-
+      tileshadow: "60 px -16px green",
     };
     console.log(this.state.data);
     getAllStates(this.onGetAllStatesComplete);
@@ -530,15 +526,15 @@ class Checkout extends Component {
     getPaymentMethods(this.onGetAllPaymentMethodComplete);
   }
 
-  tabClickHandler=(e)=>{
+  tabClickHandler = (e) => {
     getAllAddresses(this.onGetAllCustomerAddressComplete);
-  }
-  onButtonClicked =(id, event)=> {
-   
-    this.setState({ currentButton: this.state.currentButton === id ? null : id })
+  };
+  onButtonClicked = (id, event) => {
+    this.setState({
+      currentButton: this.state.currentButton === id ? null : id,
+    });
     // console.log(id);
-
-  }
+  };
   handleNext = (event) => {
     if (this.state.value === 0) {
       console.log(this.state.activeStep);
@@ -638,13 +634,12 @@ class Checkout extends Component {
   inputpincodeChangeHandler = (e) => {
     this.setState({ pincode: e.target.value });
   };
-  addressSelectHandler = (e) =>{
-    e.style.color="green";
-
-  }
+  addressSelectHandler = (e) => {
+    e.style.color = "green";
+  };
   render() {
     const { classes } = this.props;
-    
+
     return (
       <div>
         <Header
@@ -659,7 +654,9 @@ class Checkout extends Component {
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <Typography component="div">{this.getStepContent(index)}</Typography>
+                    <Typography component="div">
+                      {this.getStepContent(index)}
+                    </Typography>
                     <div className={classes.actionsContainer}>
                       <div>
                         <Button
@@ -707,15 +704,6 @@ class Checkout extends Component {
                       component="h6"
                       className={classes.cardTitle}
                     >
-                      <span className="cart-item-price grey">
-                        <Badge
-                          badgeContent={this.state.totalCartItems}
-                          color="primary"
-                          className="cart-badge"
-                          showZero={true}
-                        />
-                      </span>
-
                       <strong>Summary</strong>
                     </Typography>
                   </FormControl>
@@ -749,9 +737,10 @@ class Checkout extends Component {
                                   aria-hidden="true"
                                 />
                               )}
-                              {cartitem.itemname}
+                              <p style={{ textAlign: "left" }}>
+                                {cartitem.itemname}
+                              </p>
                             </div>
-
                             {cartitem.quantity}
 
                             <div className="cart-item-price grey">
@@ -762,12 +751,17 @@ class Checkout extends Component {
                                 {" " + cartitem.price}
                               </i>
                             </div>
+                            <br />
+                            <b />
+                            <br />
                           </div>
                         )
                       )}
                     </div>
                   </FormControl>
-                  <Divider variant="middle" />
+                  <br />
+                  <br />
+                  <Divider variant="fullWidth" />
                   <FormControl className={classes.formControl}>
                     <div className="total-price-summary">
                       <div className="total-amount-txt">
