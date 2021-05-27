@@ -1,6 +1,6 @@
-import React, { useEffect, Component } from "react";
+import React, { Component } from "react";
 import "./Checkout.css";
-import Details from "../details/Details";
+// import Details from "../details/Details";
 import "../details/Details.css";
 import PropTypes from "prop-types";
 import Header from "../../common/header/Header";
@@ -14,26 +14,26 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
 import Paper from "@material-ui/core/Paper";
-import CardActions from "@material-ui/core/CardActions";
+// import CardActions from "@material-ui/core/CardActions";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles,ThemeProvider } from "@material-ui/core/styles";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
+// import GridListTileBar from "@material-ui/core/GridListTileBar";
 import {
   getAllAddresses,
   getAllStates,
   saveAddress,
   getPaymentMethods,
 } from "../../common/api/address";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+// import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+// import StarBorderIcon from "@material-ui/icons/StarBorder";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import {
   Divider,
@@ -44,18 +44,16 @@ import {
   CardContent,
   Badge,
   Button,
-  Snackbar,
-  CardActionArea,
+  // Snackbar,
+  // CardActionArea,
 } from "@material-ui/core";
 
-import {green,grey} from "@material-ui/core/colors";
-import shadows from "@material-ui/core/styles/shadows";
+// import {green,grey} from "@material-ui/core/colors";
+// import shadows from "@material-ui/core/styles/shadows";
 import Box from '@material-ui/core/Box';
-import { theme } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/styles'; 
-import { createMuiTheme } from "@material-ui/core/styles";
-import { Autorenew, FormatAlignRightOutlined } from "@material-ui/icons";
-
+// import { Autorenew, FormatAlignRightOutlined, ImportantDevices, Translate } from "@material-ui/icons";
+import MenuItem from '@material-ui/core/MenuItem';
+import { createMuiTheme } from '@material-ui/core/styles';
 const styles = (theme) => ({
   root: {
     display: "flex",
@@ -63,6 +61,27 @@ const styles = (theme) => ({
     justifyContent: "space-around",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
+  
+  },
+ 
+  // MuiPaper: {
+  //   root: {
+  //     padding: '10px',
+  //     marginBottom: '10px',
+  //     maxHeight:'calc(100% - 360px)',
+  //   },
+    
+  // },
+  // MuiMenu: {
+  //   root: {
+  //     maxHeight:'calc(100% - 360px)',
+  //     // transform:Trans(0,48),
+  //   },
+    
+ // },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+
   },
   gridList: {
     flexWrap: "nowrap",
@@ -88,7 +107,9 @@ const styles = (theme) => ({
     margin: theme.spacing.index,
     minWidth: 240,
     maxWidth: 240,
+   
   },
+ 
   title: {
     color: theme.palette.primary.light,
   },
@@ -118,6 +139,33 @@ const styles = (theme) => ({
   defaultButton:{
     color: theme.palette.primary,
   
+  },
+});
+
+const theme = createMuiTheme({
+  overrides: {
+      MuiPaper: {
+      root: {
+       // transform:'TranslateY(48) important',
+       // minWidth:'200px important'
+      
+      },
+      
+    },
+    MuiMenu: {
+      paper: {
+        maxHeight:'calc(100% - 450px)',
+         transform:'TranslateY(48px) !important',
+         minWidth:'200px !important'
+      },
+      
+    },
+    MuiListItem: {
+      gutters: {
+      paddingRight:'0px',
+      },
+      
+    },
   }
 });
 function TabPanel(props) {
@@ -265,19 +313,22 @@ class Checkout extends Component {
               </FormControl>
               <br />
               <br />
-              <FormControl required className={classes.formControl}>
+              {/* <FormControl required className={classes.formControl}>
         <InputLabel htmlFor="age-native-required">State</InputLabel>
-                <Select
+                <Select maxMenuHeight={50}
                   native value={<Input />}
                   value={this.state.state_name} 
                   onChange={this.inputstateChangeHandler}
+                 
                   inputProps={{
                     id: 'age-native-required',
+                    style:{paddingLeft:20},
+                   
                   }}
                 >
-                  <option  />
+                  <option />
                   {this.state.stateList.map((name,index) => (
-                    <option id={name.id} value={name.id} key={index}>
+                    <option id={name.id} value={name.id} key={index} >
                       {name.state_name}
                     </option>
                   ))}
@@ -285,8 +336,31 @@ class Checkout extends Component {
                 <FormHelperText className={this.state.stateRequired}>
                   <span className="red">required</span>
                 </FormHelperText>
-              </FormControl>
-              <br />
+              </FormControl> */}
+            <ThemeProvider theme={theme}>
+          <FormControl id="form-control-select" required 
+          className={classes.formControl} >
+        <InputLabel id="demo-simple-select-required-label" 
+        >State</InputLabel>
+        <Select 
+
+          labelId="demo-simple-select-required-label"
+          id="demo-simple-select-required"
+          value={this.state.statename} 
+          onChange={this.inputstateChangeHandler}
+          className= {classes.selectEmpty}
+        >
+         
+          {this.state.stateList.map((name,index) => (
+                    <MenuItem id={name.id} value={name.id} key={index} >
+                      {name.state_name}
+                    </MenuItem>
+                  ))}
+        </Select>
+        <FormHelperText>Required</FormHelperText>
+      </FormControl>
+      </ThemeProvider>
+           <br />
               <br />
 
               <FormControl>
@@ -466,7 +540,7 @@ class Checkout extends Component {
 
   }
   handleNext = (event) => {
-    if (this.state.value == 0) {
+    if (this.state.value === 0) {
       console.log(this.state.activeStep);
       if (this.state.activeStep === 0) {
         this.setState({ activeStep: 1 });
