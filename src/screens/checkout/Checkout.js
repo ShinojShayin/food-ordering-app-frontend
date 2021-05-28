@@ -385,13 +385,12 @@ class Checkout extends Component {
             <RadioGroup
               aria-label="payment"
               name="payment"
-              defaultValue={this.state.selectedRadioVal}
               onChange={this.radiohandleChange}
             >
               {this.state.paymentList.map((payment) => (
                 <FormControlLabel
                   key={payment.id}
-                  value={payment.payment_name}
+                  value={payment.id}
                   control={<Radio />}
                   label={payment.payment_name}
                 />
@@ -450,13 +449,37 @@ class Checkout extends Component {
   };
   onSaveOrderRequestComplete = (code, response) => {
     if (code === 200) {
+      let orderID= response.id;
       console.log("Order Placed sucessfully");
-    }else{
-
+      this.showMessage("Order placed successfully! Your order ID is "+ {orderID});
+    }else{ 
+      console.log("order Update status code" + code);
+      this.showMessage("Unable to place your order! Please try again!");
     }
-    console.log("order Update status code" + code);
+   
+  };
+  showMessage = (message) => {
+    if (this.state.messageBox) {
+      setTimeout(() => {
+        this.setState({
+          messageContent: message,
+          messageBox: true,
+        });
+      }, 300);
+    } else {
+      this.setState({
+        messageContent: message,
+        messageBox: true,
+      });
+    }
   };
 
+  handleMessageBoxClose = () => {
+    this.setState({
+      messageContent: "",
+      messageBox: false,
+    });
+  };
 
 
   constructor(props) {
@@ -489,6 +512,8 @@ class Checkout extends Component {
       currentButton: null,
       tileshadow: "60 px -16px green",
       selectedAddress:"",
+      messageBox: false,
+      messageContent: "",
     };
     console.log(this.state.data);
     getAllStates(this.onGetAllStatesComplete);
@@ -530,7 +555,7 @@ class Checkout extends Component {
   };
 
   radiohandleChange = (event) => {
-    console.log(" event.target.value " + event.target.value);
+    console.log(" selectedRadioVal " + event.target.value);
     this.setState({ selectedRadioVal: event.target.value });
   };
 
@@ -602,15 +627,15 @@ class Checkout extends Component {
       itemList.push(itemObj);
   
   });
-  let paymentID= (Math.floor(100000 + Math.random() * 900000));
-  console.log(Math.floor(100000 + Math.random() * 900000));
+  // let paymentID= (Math.floor(100000 + Math.random() * 900000));
+  // console.log(Math.floor(100000 + Math.random() * 900000));
   saveOrder(
     this.state.selectedAddress,
     this.state.data.cartitems.bill,
     null,
     0,
     itemList,
-    paymentID,
+    this.state.selectedRadioVal,
     this.state.data.cartitems.restaurantid,
     this.onSaveOrderRequestComplete)
 
@@ -798,6 +823,16 @@ class Checkout extends Component {
             message={this.state.messageContent}
           /> */}
           </div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.messageBox}
+            onClose={this.handleMessageBoxClose}
+            autoHideDuration={3000}
+            message={this.state.messageContent}
+          />
         </div>
       </div>
     );
