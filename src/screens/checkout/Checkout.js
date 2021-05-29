@@ -446,7 +446,7 @@ class Checkout extends Component {
     if (code === 201) {
       let orderID = response.id;
       this.showMessage(
-        "Order placed successfully! Your order ID is " + { orderID }
+        "Order placed successfully! Your order ID is " + orderID
       );
     } else {
       this.showMessage("Unable to place your order! Please try again!");
