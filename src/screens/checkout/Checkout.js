@@ -25,14 +25,10 @@ import GridListTile from "@material-ui/core/GridListTile";
 import {
   getAllAddresses,
   getAllStates,
-  saveAddress
+  saveAddress,
 } from "../../common/api/address";
-import {
-  getPaymentMethods
-} from "../../common/api/payment";
-import { 
-  saveOrder
-} from "../../common/api/order";
+import { getPaymentMethods } from "../../common/api/payment";
+import { saveOrder } from "../../common/api/order";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import {
   Divider,
@@ -57,8 +53,7 @@ const styles = (theme) => ({
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "space-around",
-    
-    
+
     backgroundColor: theme.palette.background.paper,
   },
 
@@ -122,7 +117,6 @@ const styles = (theme) => ({
 
 const theme = createMuiTheme({
   overrides: {
- 
     MuiMenu: {
       paper: {
         maxHeight: "calc(100% - 450px)",
@@ -130,7 +124,7 @@ const theme = createMuiTheme({
         minWidth: "200px !important",
       },
     },
-  
+
     MuiListItem: {
       gutters: {
         paddingRight: "0px",
@@ -140,7 +134,7 @@ const theme = createMuiTheme({
   // MuiGridListTile: {
   //   tile: {
   //     maxHeight: "400px !important",
-    
+
   //   },
   // },
 });
@@ -201,27 +195,30 @@ class Checkout extends Component {
                   component="div"
                   gutterBottom
                   variant="body1"
-                  //className={this.state.noDataNote}
+                  className="no-adrs-text"
                   style={{ marginTop: 20 }}
                 >
-                  {" "}
                   There are no saved addresses! You can save an address using
                   the 'New Address' tab or using your ‘Profile’ menu option.
                 </Typography>
               )}
               {this.state.noDataNoteNumeric === 0 && (
                 <TabPanel value={this.state.value} index={0}>
-                  <GridList cols={3} className={classes.gridListUpcomingMovies}
-                  id="ExistingAddressList">
+                  <GridList
+                    cols={3}
+                    className={classes.gridListUpcomingMovies}
+                    id="ExistingAddressList"
+                  >
                     {this.state.addressList.map((address, index) => (
-                        // <ThemeProvider theme={mytheme} key={"theme_"+index}>
-                     <GridListTile id="AddressGridTile"
+                      // <ThemeProvider theme={mytheme} key={"theme_"+index}>
+                      <GridListTile
+                        id="AddressGridTile"
                         key={address.id}
                         className={
                           this.state.currentButton === index ? "box two" : "box"
                         }
                       >
-                        <Typography color="textSecondary" id={"address_"+index }>
+                        <Typography color="textPrimary" id={"address_" + index}>
                           {address.flat_building_name}
                           <br />
                           {address.locality}
@@ -236,19 +233,20 @@ class Checkout extends Component {
                         <br />
 
                         <IconButton
-                           style={{ padding: 0, float: "right" }}
+                          style={{ padding: 0, float: "right" }}
                           className={
                             this.state.currentButton === index
                               ? classes.selectedButton
                               : classes.defaultButton
                           }
-                          onClick={(e) => this.onButtonClicked(index,address.id, e)}
+                          onClick={(e) =>
+                            this.onButtonClicked(index, address.id, e)
+                          }
                         >
                           <CheckCircleIcon aria-label={`star`} />
                         </IconButton>
                       </GridListTile>
-                        // </ThemeProvider> 
-
+                      // </ThemeProvider>
                     ))}
                   </GridList>
                 </TabPanel>
@@ -264,6 +262,7 @@ class Checkout extends Component {
                   type="text"
                   flatno={this.state.flatno}
                   onChange={this.inputflatnoChangeHandler}
+                  className="user-adr-field"
                 />
                 <FormHelperText className={this.state.flatnoRequired}>
                   <span className="red">required</span>
@@ -278,6 +277,7 @@ class Checkout extends Component {
                   type="text"
                   locality={this.state.locality}
                   onChange={this.inputlocalityChangeHandler}
+                  className="user-adr-field"
                 />
                 <FormHelperText className={this.state.localityRequired}>
                   <span className="red">required</span>
@@ -292,6 +292,7 @@ class Checkout extends Component {
                   type="text"
                   city={this.state.city}
                   onChange={this.inputcityChangeHandler}
+                  className="user-adr-field"
                 />
                 <FormHelperText className={this.state.cityRequired}>
                   <span className="red">required</span>
@@ -299,30 +300,7 @@ class Checkout extends Component {
               </FormControl>
               <br />
               <br />
-              {/* <FormControl required className={classes.formControl}>
-        <InputLabel htmlFor="age-native-required">State</InputLabel>
-                <Select maxMenuHeight={50}
-                  native value={<Input />}
-                  value={this.state.state_name} 
-                  onChange={this.inputstateChangeHandler}
-                 
-                  inputProps={{
-                    id: 'age-native-required',
-                    style:{paddingLeft:20},
-                   
-                  }}
-                >
-                  <option />
-                  {this.state.stateList.map((name,index) => (
-                    <option id={name.id} value={name.id} key={index} >
-                      {name.state_name}
-                    </option>
-                  ))}
-                </Select>
-                <FormHelperText className={this.state.stateRequired}>
-                  <span className="red">required</span>
-                </FormHelperText>
-              </FormControl> */}
+
               <ThemeProvider theme={theme}>
                 <FormControl
                   id="form-control-select"
@@ -337,7 +315,12 @@ class Checkout extends Component {
                     id="demo-simple-select-required"
                     value={this.state.statename}
                     onChange={this.inputstateChangeHandler}
-                    className={classes.selectEmpty}
+                    MenuProps={{
+                      style: {
+                        height: 610,
+                        marginBottom: 20,
+                      },
+                    }}
                   >
                     {this.state.stateList.map((name, index) => (
                       <MenuItem id={name.id} value={name.id} key={index}>
@@ -358,6 +341,7 @@ class Checkout extends Component {
                   type="text"
                   pincode={this.state.pincode}
                   onChange={this.inputpincodeChangeHandler}
+                  className="user-adr-field"
                 />
                 <FormHelperText className={this.state.pincodeRequired}>
                   <span className="red">
@@ -413,10 +397,10 @@ class Checkout extends Component {
         this.setState({ noDataNoteNumeric: 1 });
       }
       this.setState({ addressList });
-        console.log("response: 200 " + JSON.stringify(response));
+      console.log("response: 200 " + JSON.stringify(response));
     } else {
       console.log("response:" + JSON.stringify(response));
-     // this.setState({ addressList:null });
+      // this.setState({ addressList:null });
     }
   };
   onGetAllStatesComplete = (code, response) => {
@@ -435,28 +419,29 @@ class Checkout extends Component {
       let paymentList = response.paymentMethods;
       if (paymentList.length !== 0) {
         this.setState({ paymentList });
-       
       }
     } else {
       console.log("Payment    " + code);
     }
   };
   onAddAddressRequestComplete = (code, response) => {
-    if (code === 200) {
+    if (code === 201) {
       console.log("Address Added Successfully");
+      getAllAddresses(this.onGetAllCustomerAddressComplete);
     }
     console.log("Address Update status code" + code);
   };
   onSaveOrderRequestComplete = (code, response) => {
     if (code === 200) {
-      let orderID= response.id;
+      let orderID = response.id;
       console.log("Order Placed sucessfully");
-      this.showMessage("Order placed successfully! Your order ID is "+ {orderID});
-    }else{ 
+      this.showMessage(
+        "Order placed successfully! Your order ID is " + { orderID }
+      );
+    } else {
       console.log("order Update status code" + code);
       this.showMessage("Unable to place your order! Please try again!");
     }
-   
   };
   showMessage = (message) => {
     if (this.state.messageBox) {
@@ -481,10 +466,14 @@ class Checkout extends Component {
     });
   };
 
-
   constructor(props) {
     super(props);
-    if (!Boolean(this.props.userInfo)) this.props.history.push("/");
+    let cartData = props.location.state;
+
+    if (!Boolean(cartData)) {
+      cartData = { cartitems: { restaurantname: "", item_quantities: [] } };
+    }
+
     this.state = {
       noDataNote: "dispNone",
       steps: this.getSteps(),
@@ -508,35 +497,38 @@ class Checkout extends Component {
       pincodeRequired: "dispNone",
       pincodeRequiredMessage: "required",
       regexp: /^[0-9\b]+$/,
-      data: props.location.state,
+      data: cartData,
       currentButton: null,
       tileshadow: "60 px -16px green",
-      selectedAddress:"",
+      selectedAddress: "",
       messageBox: false,
       messageContent: "",
     };
-    console.log(this.state.data);
-    getAllStates(this.onGetAllStatesComplete);
-    getAllAddresses(this.onGetAllCustomerAddressComplete);
-    getPaymentMethods(this.onGetAllPaymentMethodComplete);
+
+    if (!Boolean(this.props.userInfo)) {
+      this.props.history.push("/");
+    } else {
+      getAllStates(this.onGetAllStatesComplete);
+      getAllAddresses(this.onGetAllCustomerAddressComplete);
+      getPaymentMethods(this.onGetAllPaymentMethodComplete);
+    }
   }
 
-  tabClickHandler = (e) => {
-    getAllAddresses(this.onGetAllCustomerAddressComplete);
-  };
   onButtonClicked = (index, id, event) => {
     this.setState({
       currentButton: this.state.currentButton === index ? null : index,
     });
-    this.setState({selectedAddress: id});
+    this.setState({ selectedAddress: id });
 
     // console.log(id);
   };
   handleNext = (event) => {
     if (this.state.value === 0) {
       console.log("active step " + this.state.activeStep);
-      console.log("this.state.selectedAddress"+ this.state.selectedAddress+ "what?");
-      if (this.state.activeStep === 0 && this.state.selectedAddress!=="") {
+      console.log(
+        "this.state.selectedAddress" + this.state.selectedAddress + "what?"
+      );
+      if (this.state.activeStep === 0 && this.state.selectedAddress !== "") {
         this.setState({ activeStep: 1 });
       } else if (this.state.activeStep === 1) {
         this.setState({ activeStep: 2 });
@@ -612,33 +604,33 @@ class Checkout extends Component {
       this.state.statename,
       this.onAddAddressRequestComplete
     );
+
+    this.setState({ value: 0 });
   };
   placeOrderHandler = () => {
     let itemList = [];
-    console.log("Cart Items"+ this.state.data.cartitems.item_quantities);
+    console.log("Cart Items" + this.state.data.cartitems.item_quantities);
     this.state.data.cartitems.item_quantities.forEach(function(object) {
-  
       var itemObj = {
         item_id: object.itemid,
         price: object.price,
-        quantity: object.quantity
+        quantity: object.quantity,
       };
-  
-      itemList.push(itemObj);
-  
-  });
-  // let paymentID= (Math.floor(100000 + Math.random() * 900000));
-  // console.log(Math.floor(100000 + Math.random() * 900000));
-  saveOrder(
-    this.state.selectedAddress,
-    this.state.data.cartitems.bill,
-    null,
-    0,
-    itemList,
-    this.state.selectedRadioVal,
-    this.state.data.cartitems.restaurantid,
-    this.onSaveOrderRequestComplete)
 
+      itemList.push(itemObj);
+    });
+    // let paymentID= (Math.floor(100000 + Math.random() * 900000));
+    // console.log(Math.floor(100000 + Math.random() * 900000));
+    saveOrder(
+      this.state.selectedAddress,
+      this.state.data.cartitems.bill,
+      null,
+      0,
+      itemList,
+      this.state.selectedRadioVal,
+      this.state.data.cartitems.restaurantid,
+      this.onSaveOrderRequestComplete
+    );
   };
   inputflatnoChangeHandler = (e) => {
     this.setState({ flatno: e.target.value });
@@ -673,8 +665,11 @@ class Checkout extends Component {
         />
         <div className="flex-container">
           <div className="left">
-            <Stepper activeStep={this.state.activeStep} orientation="vertical"
-            style={{padding:'0px !important'}}>
+            <Stepper
+              activeStep={this.state.activeStep}
+              orientation="vertical"
+              style={{ padding: "0px !important" }}
+            >
               {this.state.steps.map((label, index) => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
