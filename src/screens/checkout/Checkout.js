@@ -218,22 +218,33 @@ class Checkout extends Component {
                           this.state.currentButton === index ? "box two" : "box"
                         }
                       >
-                        <Typography color="textPrimary" id={"address_" + index}>
-                          {address.flat_building_name}
-                          <br />
-                          {address.locality}
-                          <br />
-                          {address.city}
-                          <br />
-                          {address.state.state_name}
-                          <br />
-                          {address.pincode}
-                          <br />
-                        </Typography>
+                        <div className="address-block">
+                          <Typography
+                            color="textPrimary"
+                            id={"address_" + index}
+                          >
+                            {address.flat_building_name}
+                            <br />
+                            {address.locality}
+                            <br />
+                            {address.city}
+                            <br />
+                            {address.state.state_name}
+                            <br />
+                            {address.pincode}
+                            <br />
+                          </Typography>
+                        </div>
+
                         <br />
 
                         <IconButton
-                          style={{ padding: 0, float: "right" }}
+                          style={{
+                            padding: 0,
+                            float: "right",
+                            width: "35px",
+                            height: "35px",
+                          }}
                           className={
                             this.state.currentButton === index
                               ? classes.selectedButton
@@ -432,14 +443,12 @@ class Checkout extends Component {
     console.log("Address Update status code" + code);
   };
   onSaveOrderRequestComplete = (code, response) => {
-    if (code === 200) {
+    if (code === 201) {
       let orderID = response.id;
-      console.log("Order Placed sucessfully");
       this.showMessage(
         "Order placed successfully! Your order ID is " + { orderID }
       );
     } else {
-      console.log("order Update status code" + code);
       this.showMessage("Unable to place your order! Please try again!");
     }
   };
@@ -564,63 +573,54 @@ class Checkout extends Component {
     this.state.city === ""
       ? this.setState({ cityRequired: "dispBlock" })
       : this.setState({ cityRequired: "dispNone" });
+    this.state.pincode === ""
+      ? this.setState({ pincodeRequired: "dispBlock" })
+      : this.setState({ pincodeRequired: "dispNone" });
 
     if (
-      this.state.pincode !== "" &&
-      (this.state.pincode.length !== 6 ||
-        !this.state.regexp.test(this.state.pincode))
+      this.state.flatno === "" ||
+      this.state.locality === "" ||
+      this.state.statename === "" ||
+      this.state.city === "" ||
+      this.state.pincode === ""
+    )
+      return;
+
+    if (
+      this.state.pincode.length !== 6 ||
+      !this.state.regexp.test(this.state.pincode)
     ) {
-      console.log("pin length" + this.state.pincode.length);
       this.setState({
         pincodeRequiredMessage:
           "Pincode must contain only numbers and must be 6 digits long",
       });
       this.setState({ pincodeRequired: "dispBlock" });
-    } else if (this.state.pincode === "") {
-      console.log("pin " + this.state.pincode.length);
-      this.setState({ pincodeRequired: "dispBlock" });
-      this.setState({ pincodeRequiredMessage: "required" });
     } else {
-      this.state.pincode === ""
-        ? this.setState({ pincodeRequired: "dispBlock" })
-        : this.setState({ pincodeRequired: "dispNone" });
-    }
-    console.log(
-      this.state.city +
-        " " +
-        this.state.flatNo +
-        " " +
-        this.state.locality +
-        "  " +
-        this.state.pincode +
-        " " +
-        this.state.statename
-    );
-    saveAddress(
-      this.state.city,
-      this.state.flatno,
-      this.state.locality,
-      this.state.pincode,
-      this.state.statename,
-      this.onAddAddressRequestComplete
-    );
+      saveAddress(
+        this.state.city,
+        this.state.flatno,
+        this.state.locality,
+        this.state.pincode,
+        this.state.statename,
+        this.onAddAddressRequestComplete
+      );
 
-    this.setState({ value: 0 });
+      this.setState({ value: 0 });
+    }
   };
   placeOrderHandler = () => {
     let itemList = [];
     console.log("Cart Items" + this.state.data.cartitems.item_quantities);
     this.state.data.cartitems.item_quantities.forEach(function(object) {
       var itemObj = {
-        item_id: object.itemid,
+        item_id: object.item_id,
         price: object.price,
         quantity: object.quantity,
       };
 
       itemList.push(itemObj);
     });
-    // let paymentID= (Math.floor(100000 + Math.random() * 900000));
-    // console.log(Math.floor(100000 + Math.random() * 900000));
+
     saveOrder(
       this.state.selectedAddress,
       this.state.data.cartitems.bill,
@@ -807,16 +807,6 @@ class Checkout extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            {/* <Snackbar
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            open={this.state.messageBox}
-            onClose={this.handleMessageBoxClose}
-            autoHideDuration={3000}
-            message={this.state.messageContent}
-          /> */}
           </div>
           <Snackbar
             anchorOrigin={{

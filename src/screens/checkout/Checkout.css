@@ -23,6 +23,14 @@
   height: 50px;
 }
 
+.address-block {
+  width: 11em;
+}
+
+.MuiGridListTile-tile {
+  width: 13em;
+}
+
 @media (max-width: 1920px) {
   .left {
     width: 76%;
@@ -132,19 +140,17 @@ li {
 }
 
 .box {
-  display: flex;
-  align-items: left;
-  justify-content: left;
   margin-bottom: 20px;
-  margin-left: 10px;
 }
 .two {
-  border: 1px solid red;
-  box-shadow: 1px 2px 5px 2px rgb(255, 0, 0);
+  border: 2px solid #f50057;
+  box-shadow: 3px 3px 0px 0px #f50057;
   margin-left: 0px;
-  margin-right: 0px;
-  padding-right: 0px;
-  padding-left: 0px;
+  padding-left: 20px !important;
+  border-radius: 5px;
+  padding-top: 20px !important;
+
+  margin-right: 25px;
 }
 
 .align-icon-button {
