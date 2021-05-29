@@ -13,7 +13,14 @@
 ::-webkit-scrollbar-thumb:hover {
     background: grey;
 } 
-
+@media (max-width: 1920px) {
+  
+    .left {
+        width: 76%;
+       
+    }
+  
+}
 
 @media (max-width: 1280px) {
     .food-card {
@@ -21,21 +28,75 @@
       margin-bottom: 4%;
     }
   }
-
-@media (max-width: 992px) {
+  @media (max-width: 992px) {
     .flex-container {
         flex-direction: column;
     }
     .left {
         width: 100%;
+       
     }
     .right {
         width: 100%; 
-    } */
+    } 
+    
      .cart-grid-item {
         padding-bottom: .1 px;
     }
+   
+    
 }
+
+  @media (max-width: 414px) {
+   li{
+       width:45% !important;
+       height: auto !important;
+   }
+   .flex-container {
+    flex-direction: column;
+}
+.left {
+    width: 100%;
+    padding:0px !important;
+   
+}
+.right {
+    width: 100%; 
+} 
+
+ .cart-grid-item {
+    padding-bottom: .1 px;
+}
+
+  }
+  @media (max-width: 360px) {
+    li{
+        width:45% !important;
+        height: auto !important;
+    }
+   div.MuiStepContent-root{
+       
+           margin-left: 0px !important;
+           padding-left: 0px !important;
+     
+   }
+
+ .left {
+     width: 100%;
+     margin-left: 0px !important;
+     padding-left: 0px !important;
+     padding-right: 0px !important;
+    
+ }
+ .right {
+     width: 100%; 
+ } 
+ 
+  .cart-grid-item {
+     padding-bottom: .1 px;
+ }
+ 
+   }
 
 
 
@@ -57,20 +118,19 @@
 .flex-container>div {
     margin: 16px;
 }
-
-.left {
-    width: 76%;
+li{
+    height: auto !important;
 }
+
+/* .left {
+    width: 76%;
+} */
 
 .right {
     padding-top: 20px;
-    /* width: 24%; */
     min-height: 300px;
 }
 
-/* .released-movie-grid-item {
-    margin: 15px;
-} */
 .add-shadow{
 box-shadow: red;
 
@@ -107,7 +167,6 @@ box-shadow: red;
     max-width: 600px;
     width: 95% !important;
   }
-  
   .food-card-body {
     padding-top: 25px !important;
   }
