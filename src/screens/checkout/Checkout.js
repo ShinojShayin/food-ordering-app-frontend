@@ -83,7 +83,6 @@ const styles = (theme) => ({
   formControl: {
     margin: theme.spacing.index,
     minWidth: 240,
-    maxWidth: 240,
   },
 
   title: {
@@ -240,10 +239,11 @@ class Checkout extends Component {
 
                         <IconButton
                           style={{
-                            padding: 0,
-                            float: "right",
                             width: "35px",
                             height: "35px",
+                            position: "absolute",
+                            bottom: 5,
+                            right: 25,
                           }}
                           className={
                             this.state.currentButton === index
@@ -254,7 +254,7 @@ class Checkout extends Component {
                             this.onButtonClicked(index, address.id, e)
                           }
                         >
-                          <CheckCircleIcon aria-label={`star`} />
+                          <CheckCircleIcon />
                         </IconButton>
                       </GridListTile>
                       // </ThemeProvider>
@@ -408,10 +408,6 @@ class Checkout extends Component {
         this.setState({ noDataNoteNumeric: 1 });
       }
       this.setState({ addressList });
-      console.log("response: 200 " + JSON.stringify(response));
-    } else {
-      console.log("response:" + JSON.stringify(response));
-      // this.setState({ addressList:null });
     }
   };
   onGetAllStatesComplete = (code, response) => {
@@ -421,8 +417,6 @@ class Checkout extends Component {
       } else {
         this.setState({ stateList });
       }
-
-      //  console.log(stateList);
     }
   };
   onGetAllPaymentMethodComplete = (code, response) => {
@@ -431,16 +425,12 @@ class Checkout extends Component {
       if (paymentList.length !== 0) {
         this.setState({ paymentList });
       }
-    } else {
-      console.log("Payment    " + code);
     }
   };
   onAddAddressRequestComplete = (code, response) => {
     if (code === 201) {
-      console.log("Address Added Successfully");
       getAllAddresses(this.onGetAllCustomerAddressComplete);
     }
-    console.log("Address Update status code" + code);
   };
   onSaveOrderRequestComplete = (code, response) => {
     if (code === 201) {
@@ -480,7 +470,9 @@ class Checkout extends Component {
     let cartData = props.location.state;
 
     if (!Boolean(cartData)) {
-      cartData = { cartitems: { restaurantname: "", item_quantities: [] } };
+      cartData = {
+        cartitems: { restaurantname: "", item_quantities: [], bill: 0 },
+      };
     }
 
     this.state = {
@@ -528,15 +520,9 @@ class Checkout extends Component {
       currentButton: this.state.currentButton === index ? null : index,
     });
     this.setState({ selectedAddress: id });
-
-    // console.log(id);
   };
   handleNext = (event) => {
     if (this.state.value === 0) {
-      console.log("active step " + this.state.activeStep);
-      console.log(
-        "this.state.selectedAddress" + this.state.selectedAddress + "what?"
-      );
       if (this.state.activeStep === 0 && this.state.selectedAddress !== "") {
         this.setState({ activeStep: 1 });
       } else if (this.state.activeStep === 1) {
@@ -556,7 +542,6 @@ class Checkout extends Component {
   };
 
   radiohandleChange = (event) => {
-    console.log(" selectedRadioVal " + event.target.value);
     this.setState({ selectedRadioVal: event.target.value });
   };
 
@@ -610,7 +595,6 @@ class Checkout extends Component {
   };
   placeOrderHandler = () => {
     let itemList = [];
-    console.log("Cart Items" + this.state.data.cartitems.item_quantities);
     this.state.data.cartitems.item_quantities.forEach(function(object) {
       var itemObj = {
         item_id: object.item_id,
@@ -642,10 +626,7 @@ class Checkout extends Component {
     this.setState({ city: e.target.value });
   };
   inputstateChangeHandler = (e) => {
-    console.log("statename log" + this.state.statename);
     this.setState({ statename: e.target.value });
-
-    console.log("statename log" + this.state.statename);
   };
   inputpincodeChangeHandler = (e) => {
     this.setState({ pincode: e.target.value });
@@ -704,7 +685,7 @@ class Checkout extends Component {
             </Stepper>
             {this.state.activeStep === this.state.steps.length && (
               <Paper square elevation={0} className={classes.resetContainer}>
-                <Typography component={"div"}>
+                <Typography gutterBottom variant="h6" component="h6">
                   View the summary & place your order now!
                 </Typography>
                 <Button onClick={this.handleReset} className={classes.button}>
@@ -717,7 +698,10 @@ class Checkout extends Component {
             <Grid item>
               <Card className="food-card">
                 <CardContent className="food-card-body">
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    className={classes.formControl}
+                    style={{ width: "100%" }}
+                  >
                     <Typography
                       gutterBottom
                       variant="h5"
@@ -727,17 +711,24 @@ class Checkout extends Component {
                       <strong>Summary</strong>
                     </Typography>
                   </FormControl>
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    className={classes.formControl}
+                    style={{ width: "100%" }}
+                  >
                     <Typography
                       gutterBottom
                       variant="h6"
                       component="h6"
                       className={classes.cardTitle}
+                      style={{ color: "grey" }}
                     >
                       {this.state.data.cartitems.restaurantname}
                     </Typography>
                   </FormControl>
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    className={classes.formControl}
+                    style={{ width: "100%" }}
+                  >
                     <div>
                       {this.state.data.cartitems.item_quantities.map(
                         (cartitem) => (
@@ -761,19 +752,15 @@ class Checkout extends Component {
                                 {cartitem.itemname}
                               </p>
                             </div>
-                            {cartitem.quantity}
-
+                            <div className="grey">{cartitem.quantity}</div>
                             <div className="cart-item-price grey">
                               <i
                                 aria-hidden="true"
                                 className="fa fa-inr rupee-icon"
-                              >
-                                {" " + cartitem.price}
-                              </i>
+                              />
+                              &nbsp;
+                              {cartitem.price.toFixed(2)}
                             </div>
-                            <br />
-                            <b />
-                            <br />
                           </div>
                         )
                       )}
@@ -782,7 +769,10 @@ class Checkout extends Component {
                   <br />
                   <br />
                   <Divider variant="fullWidth" />
-                  <FormControl className={classes.formControl}>
+                  <FormControl
+                    className={classes.formControl}
+                    style={{ width: "100%" }}
+                  >
                     <div className="total-price-summary">
                       <div className="total-amount-txt">
                         <strong>Net Amount </strong>
@@ -792,7 +782,9 @@ class Checkout extends Component {
                           aria-hidden="true"
                           className="fa fa-inr rupee-icon"
                         />
-                        <strong>{" " + this.state.data.cartitems.bill}</strong>
+                        <strong>
+                          {" " + this.state.data.cartitems.bill.toFixed(2)}
+                        </strong>
                       </div>
                     </div>
                   </FormControl>

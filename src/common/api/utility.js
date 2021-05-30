@@ -16,7 +16,6 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
       let responseHeaderMap = {};
 
       if (this.status !== 0) {
-        // console.log("in if");
         let arr = responseHeaders.trim().split(/[\r\n]+/);
         arr.forEach(function(line) {
           let parts = line.split(": ");

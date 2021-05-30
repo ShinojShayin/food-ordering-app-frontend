@@ -21,13 +21,10 @@ export function getAllAddresses(onComplete) {
   );
 }
 export function getAllStates(onComplete) {
- // let userInfo = utility.getLoggedinUser();
   let responseCallback = (code, response) => {
     onComplete(code, response);
   };
-  // let header = {
-  //   authorization: "Bearer " + userInfo.access_token,
-  // };
+
   utility.getData(
     { url: CHECKOUT_ALL_STATES_URL },
     null,
