@@ -14,7 +14,6 @@ import {
   Snackbar,
   Menu,
   MenuItem,
-  Paper,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import validator from "validator";
@@ -267,7 +266,7 @@ class HeaderLoginComponent extends Component {
   onRegisterRequestComplete = (code, response) => {
     if (code !== 201) {
       this.setState({
-        regServerErrorMsgShow: true,
+        regServerErrorMsgShow: "dispBlock",
         regServerErrorMsg: response.message,
       });
     } else {
@@ -281,10 +280,8 @@ class HeaderLoginComponent extends Component {
   };
 
   registerClickHandler = (e) => {
-    let valid = true;
-
     this.setState({
-      regServerErrorMsgShow: false,
+      regServerErrorMsgShow: "dispBlock",
       regServerErrorMsg: "",
     });
 
@@ -308,27 +305,28 @@ class HeaderLoginComponent extends Component {
       : this.setState({ contactRequired: "dispNone" });
 
     if (
-      firstname === "" ||
-      email === "" ||
-      contactno === "" ||
-      contactno === "" ||
-      password === ""
-    )
-      valid = false;
+      !(
+        firstname === "" ||
+        email === "" ||
+        contactno === "" ||
+        contactno === "" ||
+        password === ""
+      )
+    ) {
+      let mail = this.emailCheck();
+      let pwd = this.passwordCheck();
+      let contactno = this.contactnoCheck();
 
-    valid = this.emailCheck();
-    valid = this.passwordCheck();
-    valid = this.contactnoCheck();
-
-    if (valid)
-      registerCustomer(
-        contactno,
-        email,
-        firstname,
-        lastname,
-        password,
-        this.onRegisterRequestComplete
-      );
+      if (mail && pwd && contactno)
+        registerCustomer(
+          contactno,
+          email,
+          firstname,
+          lastname,
+          password,
+          this.onRegisterRequestComplete
+        );
+    }
   };
 
   onLoginRequestComplete = (code, response, responseHeader) => {
@@ -373,7 +371,7 @@ class HeaderLoginComponent extends Component {
       ? this.setState({ loginPasswordRequired: "dispBlock" })
       : this.setState({ loginPasswordRequired: "dispNone" });
 
-    if (contactno === "" || password === "") valid = false;
+    if (contactno === "" || password === "") return;
 
     valid = this.loginContactnoCheck();
 
@@ -430,13 +428,11 @@ class HeaderLoginComponent extends Component {
                 horizontal: "left",
               }}
             >
-              <Paper>
-                <Link to="/profile">
-                  <MenuItem>My Profile</MenuItem>
-                </Link>
+              <Link to="/profile">
+                <MenuItem>My Profile</MenuItem>
+              </Link>
 
-                <MenuItem onClick={this.logoutUser}>Logout</MenuItem>
-              </Paper>
+              <MenuItem onClick={this.logoutUser}>Logout</MenuItem>
             </Menu>
           </div>
         )}
