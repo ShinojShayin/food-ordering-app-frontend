@@ -88,7 +88,7 @@ class Details extends Component {
     let itemFound = null;
     if (cartlist.length > 0) {
       for (let i = 0, size = cartlist.length; i < size; i++) {
-        console.log(cartlist[i].itemid + " == " + itemid);
+        // console.log(cartlist[i].itemid + " == " + itemid);
         if (cartlist[i].itemid === itemid) {
           itemFound = cartlist[i];
           itemPresent = true;
@@ -132,7 +132,22 @@ class Details extends Component {
 
   /**
    * This method navigate to checkout page if eligible and also pass this object
-   * cartitems: {restaurantid: 1, bill:150, item_quantities:[{item_id, price, quantity, itemtype, itemname}]}
+   * cartitems: 
+   * {
+        restaurantid: 1,
+        restaurantname: "Loud Noise"
+        bill: 250,
+        item_quantities: [
+          {
+            item_id: 1,
+            price: 250,
+            quantity: 1,
+            itemtype: "VEG",
+            itemname: "Hakka Noodles"
+
+          }
+        ]
+      }
    *
    */
   checkOutHandler = () => {
@@ -153,10 +168,15 @@ class Details extends Component {
 
         let cartObject = {
           restaurantid: this.props.match.params.restaurantid,
+          restaurantname: this.state.restaurantDetails.name,
           bill: this.state.totalBillPrice,
           item_quantities: itemList,
         };
-
+        // console.log("cartObject"+cartObject.restaurantname);
+        // console.log("cartObject"+cartObject.restaurantid);
+        // console.log("cartObject"+cartObject.restaurantname);
+        // console.log("cartObject"+cartObject.bill);
+        // console.log("cartObject"+cartObject.item_quantities);
         this.props.history.push({
           pathname: "/checkout",
           state: { cartitems: cartObject },
@@ -217,6 +237,7 @@ class Details extends Component {
       cartItemlist: [],
       messageBox: false,
       messageContent: "",
+      cartitems: "",
     };
 
     getRestaurantById(
@@ -395,7 +416,7 @@ class Details extends Component {
                     />
                   </span>
 
-                  <strong> My Cart</strong>
+                  <strong>My Cart</strong>
                 </Typography>
                 <div className="cart-item-container">
                   {this.state.cartItemlist.map((cartitem, itemindex) => (

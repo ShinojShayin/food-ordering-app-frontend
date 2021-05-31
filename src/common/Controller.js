@@ -7,7 +7,8 @@ import Details from "../screens/details/Details";
 import Checkout from "../screens/checkout/Checkout";
 
 class Controller extends Component {
-  // All Server Url used in this application is added in a single file. Check /common/config/serverurl.js.
+  //  All Server Url used in this application is added in a single file. 
+  // Check /common/config/serverurl.js.
 
   updateUserInfoState = (userInfo) => {
     this.setState({
@@ -26,7 +27,7 @@ class Controller extends Component {
   render() {
     return (
       <Router>
-        <Route
+         <Route
           exact
           path="/"
           render={(props) => (
@@ -36,8 +37,8 @@ class Controller extends Component {
               updateUserInfoState={this.updateUserInfoState}
             />
           )}
-        />
-        <Route
+        /> 
+         <Route
           exact
           path="/profile"
           render={(props) => (
@@ -47,8 +48,8 @@ class Controller extends Component {
               updateUserInfoState={this.updateUserInfoState}
             />
           )}
-        />
-        <Route
+        /> 
+         <Route
           exact
           path="/restaurant/:restaurantid"
           render={(props) => (
@@ -58,7 +59,7 @@ class Controller extends Component {
               updateUserInfoState={this.updateUserInfoState}
             />
           )}
-        />
+        /> 
         <Route
           exact
           path="/checkout"

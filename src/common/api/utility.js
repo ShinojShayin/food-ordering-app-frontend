@@ -31,6 +31,7 @@ let fetchDataMethod = (reqObject, data, callback, extra) => {
           extra
         );
       } else {
+        console.log("in else");
         callback(this.status, null, responseHeaderMap, extra);
       }
     }
