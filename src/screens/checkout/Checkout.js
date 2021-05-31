@@ -339,7 +339,9 @@ class Checkout extends Component {
                       </MenuItem>
                     ))}
                   </Select>
-                  <FormHelperText>Required</FormHelperText>
+                  <FormHelperText className={this.state.stateRequired}>
+                  <span className="red">required</span>
+                </FormHelperText>
                 </FormControl>
               </ThemeProvider>
               <br />

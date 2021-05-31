@@ -45,7 +45,6 @@ class Home extends Component {
       this.setState({ restaurantList });
     } else {
       this.setState({ noDataNote: "dispBlock" });
-      console.log("response: " + JSON.stringify(response));
     }
   };
 

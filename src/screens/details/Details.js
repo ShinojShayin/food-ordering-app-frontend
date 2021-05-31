@@ -46,7 +46,6 @@ class Details extends Component {
         categoryRestaurantlist: response.categories,
       });
     } else {
-      console.log("response: " + JSON.stringify(response));
     }
   };
 
@@ -88,7 +87,6 @@ class Details extends Component {
     let itemFound = null;
     if (cartlist.length > 0) {
       for (let i = 0, size = cartlist.length; i < size; i++) {
-        // console.log(cartlist[i].itemid + " == " + itemid);
         if (cartlist[i].itemid === itemid) {
           itemFound = cartlist[i];
           itemPresent = true;
@@ -172,11 +170,6 @@ class Details extends Component {
           bill: this.state.totalBillPrice,
           item_quantities: itemList,
         };
-        // console.log("cartObject"+cartObject.restaurantname);
-        // console.log("cartObject"+cartObject.restaurantid);
-        // console.log("cartObject"+cartObject.restaurantname);
-        // console.log("cartObject"+cartObject.bill);
-        // console.log("cartObject"+cartObject.item_quantities);
         this.props.history.push({
           pathname: "/checkout",
           state: { cartitems: cartObject },
